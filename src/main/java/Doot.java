@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Doot {
     public static void main(String[] args) {
@@ -89,11 +91,15 @@ public class Doot {
                 "Hello! I'm \n" +
                 logo + "\n________________________________________________________________________________________________________________________\n" );
         String userInput = "hi";
+        ListMaster list = new ListMaster();
         while (!userInput.equals("bye")) {
             userInput = scanner.nextLine();
-            if (!userInput.equals("bye")) {
+            if (userInput.equals("list")) {
+                list.displayList();
+            } else if (!userInput.equals("bye")) {
+                list.addString(userInput);
                 System.out.println("________________________________________________________________________________________________________________________\n" +
-                        userInput +
+                        "added: " + userInput +
                         "\n________________________________________________________________________________________________________________________\n");
             }
         }
@@ -102,5 +108,26 @@ public class Doot {
                 "May your bones be many and your fractures few, with doots that are plentiful and true.\n" +
                 "________________________________________________________________________________________________________________________\n");
 
+    }
+
+    public static class ListMaster {
+        private List<String> arr;
+        public ListMaster() {
+            arr = new ArrayList<>();
+        }
+
+        public void addString(String str) {
+            arr.add(str);
+        }
+
+        public void displayList() {
+            int count = 1;
+            System.out.println("________________________________________________________________________________________________________________________\n");
+            for (String task : arr) {
+                System.out.println(String.valueOf(count) + ". " + task);
+                count ++;
+            }
+            System.out.println("________________________________________________________________________________________________________________________\n");
+        }
     }
 }
