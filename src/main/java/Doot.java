@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,14 +89,22 @@ public class Doot {
                 "********#+==+=:::::=#@@@@@%@@@+--:::-+*##**********#%#*######+=++++##++=====+=+++=+==========-::::::::::::::::--::--:::::-++=----=" +
                 "                                                                                                                                  ";
         System.out.println("________________________________________________________________________________________________________________________\n" +
-                "Hello! I'm \n" +
+                "hello im \n" +
                 logo + "\n________________________________________________________________________________________________________________________\n" );
         String userInput = "hi";
         ListMaster list = new ListMaster();
+
+
         while (!userInput.equals("bye")) {
             userInput = scanner.nextLine();
             if (userInput.equals("list")) {
-                list.displayList();
+                Helper.makeLines(list.returnList());
+            } else if (Helper.isMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
+                list.mark(Integer.parseInt(userInput.split(" ")[1]) - 1);
+                Helper.makeLines("doot doot\n\n" + list.returnList());
+            } else if (Helper.isUnMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
+                list.unMark(Integer.parseInt(userInput.split(" ")[1]) - 1);
+                Helper.makeLines("noot noot\n\n" + list.returnList());
             } else if (!userInput.equals("bye")) {
                 list.addString(userInput);
                 System.out.println("________________________________________________________________________________________________________________________\n" +
@@ -105,29 +114,108 @@ public class Doot {
         }
 
         System.out.println("________________________________________________________________________________________________________________________\n" +
-                "May your bones be many and your fractures few, with doots that are plentiful and true.\n" +
+                //"May your bones be many and your fractures few, with doots that are plentiful and true.\n" +
+                "thank mr skeltal\n" +
                 "________________________________________________________________________________________________________________________\n");
 
     }
 
     public static class ListMaster {
-        private List<String> arr;
+        private List<Task> arr;
         public ListMaster() {
             arr = new ArrayList<>();
         }
 
         public void addString(String str) {
-            arr.add(str);
+            arr.add(new Task(str));
         }
 
-        public void displayList() {
+        public String returnList() {
             int count = 1;
-            System.out.println("________________________________________________________________________________________________________________________\n");
-            for (String task : arr) {
-                System.out.println(String.valueOf(count) + ". " + task);
+            StringBuilder list = new StringBuilder();
+            for (Task task : arr) {
+                list.append(count).append(".[").append(task.getStatusIcon()).append("] ").append(task.getDescription()).append("\n");
                 count ++;
             }
-            System.out.println("________________________________________________________________________________________________________________________\n");
+            return list.toString();
+        }
+
+        public int size() {
+            return arr.size();
+        }
+
+        public void mark(int num) {
+            arr.get(num).setDone();
+        }
+
+        public void unMark(int num) {
+            arr.get(num).setUndone();
+        }
+
+    }
+
+    public static class Task {
+        protected String description;
+        protected boolean isDone;
+
+        public Task(String description) {
+            this.description = description;
+            this.isDone = false;
+        }
+
+        public String getStatusIcon() {
+            return (isDone ? "X" : " "); // mark done task with X
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDone() {
+            this.isDone = true;
+        }
+
+        public void setUndone() {
+            this.isDone = false;
+        }
+    }
+
+    public static class Helper {
+        //this and the next method are used to check if a string starts with mark/unmark, then followed by an integer
+        public static boolean isMark(String str) {
+            if (str.startsWith("mark ") || str.startsWith("Mark ")) {
+                String[] arr = str.split(" ");
+                if (arr.length == 2) {
+                    try {
+                        Integer.parseInt(arr[1]);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static boolean isUnMark(String str) {
+            if (str.startsWith("unmark ") || str.startsWith("Unmark ")) {
+                String[] arr = str.split(" ");
+                if (arr.length == 2) {
+                    try {
+                        Integer.parseInt(arr[1]);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static void makeLines(String str) {
+            System.out.println("________________________________________________________________________________________________________________________\n" +
+                    str +
+                    "________________________________________________________________________________________________________________________\n");
         }
     }
 }
