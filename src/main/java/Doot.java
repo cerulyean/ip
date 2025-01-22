@@ -117,6 +117,10 @@ public class Doot {
             } else if (Helper.isUnMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
                 list.unMark(Integer.parseInt(userInput.split(" ")[1]) - 1);
                 Helper.makeLines("noot noot\n\n" + list.returnList());
+            } else if (userInput.startsWith("delete ") && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
+                Task removed = list.getTask(Integer.parseInt(userInput.split(" ")[1]) - 1);
+                list.removeTask(Integer.parseInt(userInput.split(" ")[1]) - 1);
+                Helper.makeLines("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size() + " more to do\n");
             } else if (!userInput.equals("bye")) {
                 try {
                     list.addString(userInput);
@@ -165,6 +169,14 @@ public class Doot {
 
         public void unMark(int num) {
             arr.get(num).setUndone();
+        }
+
+        public Task getTask(int num) {
+            return arr.get(num);
+        }
+
+        public void removeTask(int num) {
+            arr.remove(num);
         }
 
     }
