@@ -1,7 +1,10 @@
-import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 public class Doot {
 
@@ -99,6 +102,17 @@ public class Doot {
                 logo + "\n________________________________________________________________________________________________________________________\n" );
         String userInput = "hi";
         ListMaster list = new ListMaster();
+        File f = new File("data/list.txt");
+        if (f.exists()) {
+            try {
+                list.loadTask(f);
+                Helper.makeLines(list.returnList());
+            } catch (FileNotFoundException e) {
+                Helper.makeLines("this should never be seen");
+            } catch (InvalidFormatException e) {
+                Helper.makeLines("file corrupted, go see if theres anything salvagable because upon next list mod its all going to be overwritten");
+            }
+        }
 
 
         while (!userInput.equals("bye")) {
@@ -114,16 +128,44 @@ public class Doot {
             } else if (Helper.isMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
                 list.mark(Integer.parseInt(userInput.split(" ")[1]) - 1);
                 Helper.makeLines("doot doot\n\n" + list.returnList());
+                try {
+                    Helper.saveList(list);
+                } catch (IOException e) {
+                    Helper.makeLines(e.toString());
+                }
             } else if (Helper.isUnMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
                 list.unMark(Integer.parseInt(userInput.split(" ")[1]) - 1);
                 Helper.makeLines("noot noot\n\n" + list.returnList());
+                try {
+                    Helper.saveList(list);
+                } catch (IOException e) {
+                    Helper.makeLines(e.toString());
+                }
             } else if (userInput.startsWith("delete ") && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
                 Task removed = list.getTask(Integer.parseInt(userInput.split(" ")[1]) - 1);
                 list.removeTask(Integer.parseInt(userInput.split(" ")[1]) - 1);
                 Helper.makeLines("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size() + " more to do\n");
+                try {
+                    Helper.saveList(list);
+                } catch (IOException e) {
+                    Helper.makeLines(e.toString());
+                }
+            } else if (userInput.equals("listData")) {
+                Helper.makeLines(list.listData());
+            } else if (userInput.equals("savedata")) {
+                try {
+                    Helper.saveList(list);
+                } catch (IOException e) {
+                    Helper.makeLines(e.toString());
+                }
             } else if (!userInput.equals("bye")) {
                 try {
-                    list.addString(userInput);
+                    list.addTask(userInput);
+                    try {
+                        Helper.saveList(list);
+                    } catch (IOException e) {
+                        Helper.makeLines(e.toString());
+                    }
                 } catch(InvalidFormatException e) {
                     Helper.makeLines(String.valueOf(e));
                 }
@@ -143,10 +185,28 @@ public class Doot {
             arr = new ArrayList<>();
         }
 
-        public void addString(String str) throws InvalidFormatException {
+        public void addTask(String str) throws InvalidFormatException {
             Task task = Helper.makeTask(str);
             arr.add(task);
             Helper.makeLines("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
+        }
+
+        public void loadTask(File f) throws FileNotFoundException, InvalidFormatException {
+            Scanner s = new Scanner(f);
+            int count = 0;
+            while (s.hasNext()) {
+                String line = s.nextLine();
+                if (line.startsWith("d ")) {
+                    line = line.substring(2);
+                    Task task = Helper.makeTask(line);
+                    arr.add(task);
+                    this.mark(count);
+                } else {
+                    Task task = Helper.makeTask(line);
+                    arr.add(task);
+                }
+                count += 1;
+            }
         }
 
         public String returnList() {
@@ -155,6 +215,14 @@ public class Doot {
             for (Task task : arr) {
                 list.append(count).append(". ").append(task.getDetails()).append("\n");
                 count ++;
+            }
+            return list.toString().trim();
+        }
+
+        public String listData() {
+            StringBuilder list = new StringBuilder();
+            for (Task task : arr) {
+                list.append(task.creationString()).append("\n");
             }
             return list.toString().trim();
         }
@@ -179,6 +247,12 @@ public class Doot {
             arr.remove(num);
         }
 
+        public void loadTasks(Scanner s) throws FileNotFoundException {
+            while (s.hasNext()) {
+
+            }
+        }
+
     }
 
     public enum Type {T, D, E}
@@ -195,6 +269,8 @@ public class Doot {
         }
 
         public abstract String getType();
+
+        public abstract String creationString();
 
         public String getDetails() {
             return this.getStatusIcon() + " " + this.getDescription();
@@ -231,10 +307,20 @@ public class Doot {
         public String getDetails() {
             return this.getType() + this.getStatusIcon() + " " + this.getDescription();
         }
+
+        @Override
+        public String creationString() {
+            StringBuilder list = new StringBuilder();
+            if (this.isDone) {
+                list.append("d ");
+            }
+            list.append("todo ").append(this.getDescription());
+
+            return list.toString();
+        }
     }
 
     public static class DeadlineTask extends Task {
-
         protected String deadline;
         public DeadlineTask(String description, String deadline) {
             super(description);
@@ -250,6 +336,17 @@ public class Doot {
         @Override
         public String getDetails() {
             return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (by: " + deadline + ")";
+        }
+
+        @Override
+        public String creationString() {
+            StringBuilder list = new StringBuilder();
+            if (this.isDone) {
+                list.append("d ");
+            }
+            list.append("deadline ").append(this.getDescription()).append(" /by ").append(deadline);
+
+            return list.toString();
         }
     }
     public static class EventTask extends Task {
@@ -272,9 +369,36 @@ public class Doot {
         public String getDetails() {
             return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (from: " + start + " to: " + end + ")";
         }
+
+        @Override
+        public String creationString() {
+            StringBuilder list = new StringBuilder();
+            if (this.isDone) {
+                list.append("d ");
+            }
+            list.append("event ").append(this.getDescription()).append(" /from ").append(start).append(" /to ").append(end);
+
+            return list.toString();
+        }
     }
 
     public static class Helper {
+        public static void saveList(ListMaster list) throws IOException {
+            File folder = new File("data");
+            if (!folder.exists()) {
+                if (!folder.mkdirs()) {
+                    throw new IOException("folder creation broke");
+                }
+            }
+            File f = new File("data/list.txt");
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            FileWriter fw = new FileWriter("data/list.txt");
+            fw.write(list.listData());
+            fw.close();
+
+        }
         //this and the next method are used to check if a string starts with mark/unmark, then followed by an integer
         public static boolean isMark(String str) {
             if (str.startsWith("mark ") || str.startsWith("Mark ")) {
