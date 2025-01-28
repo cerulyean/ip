@@ -1,13 +1,22 @@
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
+
 
 public class Doot {
-
+    static String[] formats = {
+            "yyyy-MM-dd",          // Example: 2019-10-15
+            "d/M/yyyy",            // Example: 2/12/2019
+    };
     public static class InvalidFormatException extends Exception {
         public InvalidFormatException(String message) {
             super(message);
@@ -322,10 +331,17 @@ public class Doot {
 
     public static class DeadlineTask extends Task {
         protected String deadline;
+        protected LocalDate datedeadline;
         public DeadlineTask(String description, String deadline) {
             super(description);
             this.type = Type.D;
             this.deadline = deadline;
+            for (String format : formats) {
+                try {
+                    this.datedeadline = LocalDate.from(LocalDate.parse(deadline, DateTimeFormatter.ofPattern(format)).atStartOfDay());
+                } catch (DateTimeParseException ignored) {
+                }
+            }
         }
 
         @Override
@@ -333,9 +349,13 @@ public class Doot {
             return "[" +type.name() +"]";
         }
 
+        public String getDeadline() {
+            return !(datedeadline == null) ? datedeadline.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : deadline;
+        }
+
         @Override
         public String getDetails() {
-            return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (by: " + deadline + ")";
+            return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (by: " + getDeadline() + ")";
         }
 
         @Override
@@ -353,11 +373,30 @@ public class Doot {
         protected String start;
         protected String end;
 
+        protected LocalDate datestart;
+
+        protected LocalDate dateend;
+
         public EventTask(String description, String start, String end) {
             super(description);
             this.type = Type.E;
             this.start = start;
             this.end = end;
+
+
+
+            for (String format : formats) {
+                try {
+                    this.datestart = LocalDate.from(LocalDate.parse(start, DateTimeFormatter.ofPattern(format)).atStartOfDay());
+                } catch (DateTimeParseException ignored) {
+                }
+            }
+            for (String format : formats) {
+                try {
+                    this.dateend = LocalDate.from(LocalDate.parse(end, DateTimeFormatter.ofPattern(format)).atStartOfDay());
+                } catch (DateTimeParseException ignored) {
+                }
+            }
         }
 
         @Override
@@ -367,7 +406,15 @@ public class Doot {
 
         @Override
         public String getDetails() {
-            return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (from: " + start + " to: " + end + ")";
+            return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (from: " + getStart() + " to: " + getEnd() + ")";
+        }
+
+        public String getStart() {
+            return !(datestart == null) ? datestart.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : start;
+        }
+
+        public String getEnd() {
+            return !(dateend == null) ? dateend.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : end;
         }
 
         @Override
