@@ -109,94 +109,150 @@ public class Doot {
                 "hello im \n" +
                 logo + "\n________________________________________________________________________________________________________________________\n" );
         String userInput = "hi";
-        ListMaster list = new ListMaster();
-        File f = new File("data/list.txt");
-        if (f.exists()) {
-            try {
-                list.loadTask(f);
-                Helper.makeLines(list.returnList());
-            } catch (FileNotFoundException e) {
-                Helper.makeLines("this should never be seen");
-            } catch (InvalidFormatException e) {
-                Helper.makeLines("file corrupted, go see if theres anything salvagable because upon next list mod its all going to be overwritten");
-            }
-        }
+        TaskList list = new TaskList();
+        list = Storage.loadList("data/list.txt");
+
+        Parser parser = new Parser(list);
 
 
-        while (!userInput.equals("bye")) {
-            userInput = scanner.nextLine();
-            if (userInput.isEmpty()) {
-                Helper.makeLines("say someting im giving up on you");
-            } else if (userInput.equals("thank mr skeltal")) {
-                Helper.makeLines("good bones and calcium will come to you");
-            } else if (userInput.equals("doot doot")) {
-                Helper.makeLines("doot doot");
-            } else if (userInput.equals("list")) {
-                Helper.makeLines(list.returnList());
-            } else if (Helper.isMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
-                list.mark(Integer.parseInt(userInput.split(" ")[1]) - 1);
-                Helper.makeLines("doot doot\n\n" + list.returnList());
-                try {
-                    Helper.saveList(list);
-                } catch (IOException e) {
-                    Helper.makeLines(e.toString());
-                }
-            } else if (Helper.isUnMark(userInput) && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
-                list.unMark(Integer.parseInt(userInput.split(" ")[1]) - 1);
-                Helper.makeLines("noot noot\n\n" + list.returnList());
-                try {
-                    Helper.saveList(list);
-                } catch (IOException e) {
-                    Helper.makeLines(e.toString());
-                }
-            } else if (userInput.startsWith("delete ") && list.size() >= Integer.parseInt(userInput.split(" ")[1]) && Integer.parseInt(userInput.split(" ")[1]) >= 1) {
-                Task removed = list.getTask(Integer.parseInt(userInput.split(" ")[1]) - 1);
-                list.removeTask(Integer.parseInt(userInput.split(" ")[1]) - 1);
-                Helper.makeLines("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size() + " more to do\n");
-                try {
-                    Helper.saveList(list);
-                } catch (IOException e) {
-                    Helper.makeLines(e.toString());
-                }
-            } else if (userInput.equals("listData")) {
-                Helper.makeLines(list.listData());
-            } else if (userInput.equals("savedata")) {
-                try {
-                    Helper.saveList(list);
-                } catch (IOException e) {
-                    Helper.makeLines(e.toString());
-                }
-            } else if (!userInput.equals("bye")) {
-                try {
-                    list.addTask(userInput);
-                    try {
-                        Helper.saveList(list);
-                    } catch (IOException e) {
-                        Helper.makeLines(e.toString());
-                    }
-                } catch(InvalidFormatException e) {
-                    Helper.makeLines(String.valueOf(e));
-                }
-            }
+        while (!(userInput = scanner.nextLine()).equals("bye")) {
+            parser.handleCommand(userInput);
         }
 
         System.out.println("________________________________________________________________________________________________________________________\n" +
-                //"May your bones be many and your fractures few, with doots that are plentiful and true.\n" +
                 "thank mr skeltal\n" +
                 "________________________________________________________________________________________________________________________\n");
 
     }
 
-    public static class ListMaster {
+    public static class  UI {
+        public static void showMessage(String message) {
+            System.out.println("________________________________________________________________________________________________________________________\n" +
+                    message +
+                    "\n________________________________________________________________________________________________________________________\n");        }
+    }
+
+    public static class Parser {
+        private TaskList list;
+
+        public Parser(TaskList list) {
+            this.list = list;
+        }
+
+        public void handleCommand(String userInput) {
+            if (userInput.isEmpty()) {
+                UI.showMessage("say something I'm giving up on you");
+            } else if (userInput.equals("thank mr skeltal")) {
+                UI.showMessage("good bones and calcium will come to you");
+            } else if (userInput.equals("doot doot")) {
+                UI.showMessage("doot doot");
+            } else if (userInput.equals("list")) {
+                UI.showMessage(list.returnList());
+            } else if (Parser.isMark(userInput)) {
+                handleMark(userInput);
+            } else if (Parser.isUnMark(userInput)) {
+                handleUnMark(userInput);
+            } else if (userInput.startsWith("delete ")) {
+                handleDelete(userInput);
+            } else if (userInput.equals("listData")) {
+                UI.showMessage(list.listData());
+            } else if (userInput.equals("savedata")) {
+                saveList();
+            } else {
+                addTask(userInput);
+            }
+        }
+
+        private void handleMark(String userInput) {
+            int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+            if (isValidIndex(index)) {
+                list.mark(index);
+                UI.showMessage("doot doot\n\n" + list.returnList());
+                saveList();
+            }
+        }
+
+        private void handleUnMark(String userInput) {
+            int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+            if (isValidIndex(index)) {
+                list.unMark(index);
+                UI.showMessage("noot noot\n\n" + list.returnList());
+                saveList();
+            }
+        }
+
+        private void handleDelete(String userInput) {
+            int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+            if (isValidIndex(index)) {
+                Task removed = list.getTask(index);
+                list.removeTask(index);
+                UI.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size() + " more to do\n");
+                saveList();
+            }
+        }
+
+        private void addTask(String userInput) {
+            try {
+                list.addTask(userInput);
+                saveList();
+            } catch (InvalidFormatException e) {
+                UI.showMessage(e.toString());
+            }
+        }
+
+        private void saveList() {
+            try {
+                Storage.saveList(list);
+            } catch (IOException e) {
+                UI.showMessage(e.toString());
+            }
+        }
+
+        private boolean isValidIndex(int index) {
+            return index >= 0 && index < list.size();
+        }
+
+        public static boolean isMark(String str) {
+            if (str.startsWith("mark ") || str.startsWith("Mark ")) {
+                String[] arr = str.split(" ");
+                if (arr.length == 2) {
+                    try {
+                        Integer.parseInt(arr[1]);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static boolean isUnMark(String str) {
+            if (str.startsWith("unmark ") || str.startsWith("Unmark ")) {
+                String[] arr = str.split(" ");
+                if (arr.length == 2) {
+                    try {
+                        Integer.parseInt(arr[1]);
+                        return true;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    public static class TaskList {
         private List<Task> arr;
-        public ListMaster() {
+        public TaskList() {
             arr = new ArrayList<>();
         }
 
         public void addTask(String str) throws InvalidFormatException {
-            Task task = Helper.makeTask(str);
+            Task task = Task.makeTask(str);
             arr.add(task);
-            Helper.makeLines("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
+            UI.showMessage("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
         }
 
         public void loadTask(File f) throws FileNotFoundException, InvalidFormatException {
@@ -206,11 +262,11 @@ public class Doot {
                 String line = s.nextLine();
                 if (line.startsWith("d ")) {
                     line = line.substring(2);
-                    Task task = Helper.makeTask(line);
+                    Task task = Task.makeTask(line);
                     arr.add(task);
                     this.mark(count);
                 } else {
-                    Task task = Helper.makeTask(line);
+                    Task task = Task.makeTask(line);
                     arr.add(task);
                 }
                 count += 1;
@@ -274,6 +330,60 @@ public class Doot {
         public Task(String description) {
             this.description = description;
             this.isDone = false;
+        }
+
+        public static Task makeTask(String str) throws InvalidFormatException{
+            String taskDescription = str.substring(str.indexOf(" ") + 1).trim();
+            if (taskDescription.isEmpty()) {
+                throw new InvalidFormatException("tasj must have description at back nothing added doot doot");
+            }
+
+            if (str.startsWith("todo ")) {
+                return new todoTask(str.substring(str.indexOf(" ") + 1));
+            } else if (str.startsWith("deadline ")) {
+                if (!str.contains("/by")) {
+                    throw new InvalidFormatException("deadline needs /by weak bone man");
+                }
+                String deadline = str.substring(str.indexOf("/by") + 4);
+                if (deadline.equals("-1") || !str.contains("/by")) {
+                    throw new InvalidFormatException("pls /by correctly");
+                }
+                if (str.indexOf("/by") - 2 - str.indexOf(" ") < 1) {
+                    throw new InvalidFormatException("u need sumting between deadline and /by");
+                }
+                return new DeadlineTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/by") - 1), deadline);
+            } else if (str.startsWith("event ")) {
+                if (!str.contains("/from") || !str.contains("/to")) {
+                    throw new InvalidFormatException("need /from and /to keyword for event doot doot");
+                }
+
+                if (str.indexOf("/from") - 2 - str.indexOf(" ") < 1) {
+                    throw new InvalidFormatException("u need sumting between event and /from");
+                }
+
+                if (str.indexOf("/from") > str.indexOf("/to")) {
+                    throw new InvalidFormatException("/from before /to u dum");
+                }
+
+                if (str.indexOf("/from") + 6 > str.indexOf("/to") - 1) {
+                    throw new InvalidFormatException("oop you fuked up go put something between /from and /to");
+                }
+
+                if (str.length() <= str.indexOf("/to") + 3) {
+                    throw new InvalidFormatException("doot doot go put something behind /to space works also ");
+                }
+
+                String start = str.substring(str.indexOf("/from") + 6, str.indexOf("/to") - 1);
+                String end = str.substring(str.indexOf("/to") + 4);
+                if (start.equals("-1") || end.equals("-1")) {
+                    throw new InvalidFormatException("/from /to formatting wrong bet you have osteoporosis");
+                }
+                return new EventTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/from") - 1),
+                        start,
+                        end);
+            } else {
+                throw new InvalidFormatException("dumbass");
+            }
         }
 
         public abstract String getType();
@@ -428,8 +538,8 @@ public class Doot {
         }
     }
 
-    public static class Helper {
-        public static void saveList(ListMaster list) throws IOException {
+    public static class Storage {
+        public static void saveList(TaskList list) throws IOException {
             File folder = new File("data");
             if (!folder.exists()) {
                 if (!folder.mkdirs()) {
@@ -443,102 +553,22 @@ public class Doot {
             FileWriter fw = new FileWriter("data/list.txt");
             fw.write(list.listData());
             fw.close();
-
         }
-        //this and the next method are used to check if a string starts with mark/unmark, then followed by an integer
-        public static boolean isMark(String str) {
-            if (str.startsWith("mark ") || str.startsWith("Mark ")) {
-                String[] arr = str.split(" ");
-                if (arr.length == 2) {
-                    try {
-                        Integer.parseInt(arr[1]);
-                        return true;
-                    } catch (NumberFormatException e) {
-                        return false;
-                    }
+        
+        public static TaskList loadList(String path) {
+            File f = new File(path);
+            TaskList list = new TaskList();
+            if (f.exists()) {
+                try {
+                    list.loadTask(f);
+                    UI.showMessage(list.returnList());
+                } catch (FileNotFoundException e) {
+                    UI.showMessage("this should never be seen");
+                } catch (InvalidFormatException e) {
+                    UI.showMessage("file corrupted, go see if theres anything salvagable because upon next list mod its all going to be overwritten");
                 }
             }
-            return false;
-        }
-
-        public static boolean isUnMark(String str) {
-            if (str.startsWith("unmark ") || str.startsWith("Unmark ")) {
-                String[] arr = str.split(" ");
-                if (arr.length == 2) {
-                    try {
-                        Integer.parseInt(arr[1]);
-                        return true;
-                    } catch (NumberFormatException e) {
-                        return false;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static void makeLines(String str) {
-            System.out.println("________________________________________________________________________________________________________________________\n" +
-                    str +
-                    "\n________________________________________________________________________________________________________________________\n");
-        }
-
-        public static boolean isTask(String str) {
-            str = str.split(" ")[0];
-            return str.equals("deadline") || str.equals("todo") || str.equals("event");
-        }
-
-        public static Task makeTask(String str) throws InvalidFormatException{
-            String taskDescription = str.substring(str.indexOf(" ") + 1).trim();
-            if (taskDescription.isEmpty()) {
-                throw new InvalidFormatException("tasj must have description at back nothing added doot doot");
-            }
-
-            if (str.startsWith("todo ")) {
-                return new todoTask(str.substring(str.indexOf(" ") + 1));
-            } else if (str.startsWith("deadline ")) {
-                if (!str.contains("/by")) {
-                    throw new InvalidFormatException("deadline needs /by weak bone man");
-                }
-                String deadline = str.substring(str.indexOf("/by") + 4);
-                if (deadline.equals("-1") || !str.contains("/by")) {
-                    throw new InvalidFormatException("pls /by correctly");
-                }
-                if (str.indexOf("/by") - 2 - str.indexOf(" ") < 1) {
-                    throw new InvalidFormatException("u need sumting between deadline and /by");
-                }
-                return new DeadlineTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/by") - 1), deadline);
-            } else if (str.startsWith("event ")) {
-                if (!str.contains("/from") || !str.contains("/to")) {
-                    throw new InvalidFormatException("need /from and /to keyword for event doot doot");
-                }
-
-                if (str.indexOf("/from") - 2 - str.indexOf(" ") < 1) {
-                    throw new InvalidFormatException("u need sumting between event and /from");
-                }
-
-                if (str.indexOf("/from") > str.indexOf("/to")) {
-                    throw new InvalidFormatException("/from before /to u dum");
-                }
-
-                if (str.indexOf("/from") + 6 > str.indexOf("/to") - 1) {
-                    throw new InvalidFormatException("oop you fuked up go put something between /from and /to");
-                }
-
-                if (str.length() <= str.indexOf("/to") + 3) {
-                    throw new InvalidFormatException("doot doot go put something behind /to space works also ");
-                }
-
-                String start = str.substring(str.indexOf("/from") + 6, str.indexOf("/to") - 1);
-                String end = str.substring(str.indexOf("/to") + 4);
-                if (start.equals("-1") || end.equals("-1")) {
-                    throw new InvalidFormatException("/from /to formatting wrong bet you have osteoporosis");
-                }
-                return new EventTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/from") - 1),
-                        start,
-                        end);
-            } else {
-                throw new InvalidFormatException("dumbass");
-            }
+            return list;
         }
     }
 }
