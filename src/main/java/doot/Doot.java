@@ -1,3 +1,5 @@
+package doot;
+
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,8 +10,7 @@ import java.util.List;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.format.DateTimeFormatter;
+
 
 public class Doot {
     static String[] formats = {
