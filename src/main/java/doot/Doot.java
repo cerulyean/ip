@@ -3,13 +3,15 @@ package doot;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 import java.time.format.DateTimeParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
+import static doot.Logo.LOGO;
 
 
 public class Doot {
@@ -17,6 +19,8 @@ public class Doot {
             "yyyy-MM-dd",          // Example: 2019-10-15
             "d/M/yyyy",            // Example: 2/12/2019
     };
+
+    //Exception for when the format is invalid
     public static class InvalidFormatException extends Exception {
         public InvalidFormatException(String message) {
             super(message);
@@ -24,92 +28,10 @@ public class Doot {
     }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String logo = """
-                                                                                                                                                 \s
-                                                                                                                                                 \s
-                                                                                                                                                 \s
-                                         .:::::..                                                                                                \s
-                                      .-*########*+-..                                                                                           \s
-                                   .-#####%%%%%%%######+:.                                                                                       \s
-                                .:+####%%%%%%%%%%%%%####**+=-..                                                                                  \s
-                             ..=*####%%%%%%%%%%%%%%%%%###**++=-.                                                                                 \s
-                           .:+**####%%%%%%%%%%@@%%%%%%%###**++==:                                                                                \s
-                          .=++****###%%%%%%%%%@@@%%%%%%%%##**++==-.                                                                              \s
-                          :=+++****###%%%%%%@%%%%@%%%%%%%%##*+++==-.                                                                             \s
-                         .-++++++****###%%%%%%%%%%%%%%%%%%%##*+++==-:                                                                            \s
-                         .==++++++++***##%%%%%%%%%%%%%%%%%%##**++==--:.                                                                          \s
-                         :========++++**##%%%%%%%%%%%%%%%%###**++==---:.                                                                         \s
-                         :===--======++**###%%%%%%%%%%%%%###***+===----.                                                                         \s
-                         .---------===+++**##%%%%%%%%%%###*****+===-----.                                                                        \s
-                         .:---::::---==+++**##%%%%%%%###****+++++==------.                                                                       \s
-                         .:-::::::::---==++**#%%%%@%%%#***+++++++=------:..                                                                      \s
-                          .:::::...:::--===+**#%%%%%%%##*++++++++=---::::..                                                                      \s
-                          .:::.......::---===+*#%%%###***++++=====-:.......                                                                      \s
-                          .-==-:......:::----==+*#*++======---=----....::.                                                                       \s
-                           .:-=+=-......:::----+##+==----:::.:==--:... .+.                                                                       \s
-                            ..:-++-:.....:::---+##+=-::....:::+=:::. ...+                                                                        \s
-                             ...:=*=:.......::-=#*=:..     .:-*+...-=.-+..                                                                       \s
-                                ...-=++=:......=*+-:.      ..-*+...:+*+:..                                                                       \s
-                                  .==.:-=**+=--===--.     .-=+*=.:::....  .                                                                      \s
-                                    .  ..:-=-+#*=-=*+:..:*%=*#*:...=.                                                                            \s
-                                       .:::..-**+=--+*#%%%++=+=.  .-:                                                                            \s
-                                       .:::-+=-::::.. ....:-==-...+*.                                                                            \s
-                                        .::-=+++-:-::....:-==--##+*-.                                                                            \s
-                                        .::---==:.:=+*#***++++**#*=-:.                                                                           \s
-                                         .:::----..:--==++++++++==-::                                                                            \s
-                                          ....::-=:===++--===+==--:...                          .:                                               \s
-                                             ...:-+=--==-:.......:-=-..                        .-=.                                              \s
-                                               ...:----:::------:....::...                .:. ..-...                                             \s
-                                                   ..:--==========-:  ..--:.........   ...:=. .:=.     :=..                                      \s
-                                                      ..:-=======:..    ..:=+=-:.::--:.:-.--  .-=.    :+...                                      \s
-                                                                            .--**:...---:.=-..:=:   .:*.                                         \s
-                                                                           .-=...-++-..:::+=:::=.   .+:     .:.                                  \s
-                                                                           .=*.    .:=+=:.=--:==-...--.    .*-.                                  \s
-                                                                           .:%-.      :--+#-.-%=+***#:    .*.                                    \s
-                                                                           . -=--:....:..+#-+=%..:=*#*#+:.*:                                     \s
-                                                                           ..:*=------+=--*-:.*:-::==-=+==+=:..                                  \s
-                                                                           ....:---==-+=-:--=:*:..---:.:+==***+=:.                               \s
-                                                                                 .:*#:+----=-%#..=.--:---::-==+****=..                           \s
-                                                                                 .:=--=+--#*--#--:*#-...:-*-:::==+****+-:.           ......      \s
-                                                                                 ....:-==-+#-#*::-%+:.-:-...-++-.:-=++****+-..  ...:::...::.     \s
-                                                                                    .:+*+-=#=#*--=@-:-##:  .:.=#*...:-==++***++=-:-....:::::     \s
-                                                                                       :*+-*=**:-*#--+%---:....-*=.....:-===++====------=--:.    \s
-                                                                                        :#====+ .+--=#=-:.:-+:..==..   ...:----=++=======--.     \s
-                                                                                         :#==-= :=..++-----:=+:.=-...     ..-:-#@%#*+++===-.     \s
-                                                                                          -+---.::.:=...-+-:::.-=:...       ..=**@%**#*+==.      \s
-                                                                                          .:---:-..-:    ..-+=--:.. .        :=++****++*=.       \s
-                                                                                          .:=*#%%%+:.       .....           .:-=++**+++-.        \s
-                                                                                          .:-----+*@=.        ..             :-+++*+==:.         \s
-                                                                                           .-=****+-.                        .:-====:. .         \s
-                                                                                             ..::..                           ......             \s
-                                                                                                .                                                \s
-                                                                                                                                                 \s
-                                                                                                                                                 \s
-                ==========+*+====*#####+#%%%%@%@@@@%#*-::+%@@@@@@@@@@@%@%#++=+*#@%@@@@@@@@@@@@#+=#%%#%##@@@@@@@@@@@%@@@@@@@@@@@##%#%%#+=========--
-                =========+**+======#@@@@@@@@@@@@@@@@@@@*@@@@@@@@@@@@@@@@@%%*=#%#@@@@@@@@@@@@@@@@+==#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#+=========----
-                ========++++=======+@@@@@@@@@@@@@@@@@@@#@@@@@@@@@@@@@@@@@@@@*@@@@@@@@@@@@@@@@@@@+====+@@@@@@@@@@@@@@@@@@@@@@@@@@@*========--------
-                ========++=========+@@@@@@@@%@@@@@@@@@@#@@@@@@@@@@@@@@@@@@@@*@@@@@@@@@@@@@@@@@@@*=======#@@%%@@@@@@@@@@@@@%#@@%+======+=-=--==----
-                ===================+@@@@@@%#**#%@@@@@@@#@@@@@@@@***#%@@@@@@@#@@@@@@@#*##%@@@@@@@*=======+++**##%@@@@@@@%****+====:::-=--:---=-----
-                ===================*@@@@@@@-:-=+@@@@@@@#@@@@@@@@:::+*@@@@@@@#@@@@@@%+===*@@@@@@@*====+++++==+*+*@@@@@@@*=======-::::::::::::-::--=
-                ===================#@@@@@@@-:-=+@@@@@@@#@@@@@@@%:::-#@@@@@@@#@@@@@@%++++*%@@@@@@*+==++++++=++=+*@@@@@@@*=====+-::::--:::::::------
-                ===================%@@@@@@@-:=++@@@@@@@#@@@@@@@@::::*@@@@@@@#@@@@@@%+===*@@@@@@@*==+***+++**=--+@@@@@@@+------:::---:::::---------
-                ==================+%@@@@@@@-=+++@@@@@@@%@@@@@@@@::::=@@@@@@@#@@@@@@%+=++*@@@@@@@*++###****#+=--=@@@@@@@+::::--:::--::-:-----------
-                ==================+%@@@@@@@-*+=+@@@@@@@#@@@@@@@@::::=@@@@@@@#@@@@@@@++++*@@@@@@@#*####*+*#*===:=@@@@@@@+:::::::::-::-:------------
-                ==================+#@@@@@@@+*==+@@@@@@@#@@@@@@@%::::=@@@@@@@#@@@@@@@*+++*@@@@@@@*++###*#+++=-=-=@@@@@@@+:::::::::-::--------------
-                ===================*@@@@@@@*++==@@@@@@@%@@@@@@@@::::=@@@@@@@%@@@@@@@**++*@@@@@@@*-+***+=+==--=:=@@@@@@@*:::::--::-:::---:::::---=-
-                ===================#@@@@@@@*++=+@@@@@@@%@@@@@@@%:-::=@@@@@@@#@@@@@@@#***#@@@@@@@#*===---==-----=@@@@@@@+:::::.:::-::::--::::::----
-                ==================+#@@@@@@@*+==+@@@@@@@%@@@@@@@@-:::-%@@@@@@#@@@@@%%***+#@@@@@@@*=--===-=------*@@@@@@@*:::::::::::::::::-:::::--:
-                ==================**@@@@@@@*=*@@@@@@@@@%@@@@@@@@@%=:-@@@@@@@#@@@@@@@#*%@@@@@@@@@*===-======----*@@@@@@@*::::::::::---:::::::::::::
-                ++=======++======*=+@@@@@@@%@@@@@@@@@@@%@@@@@@@@@@@@%@@@@@@@#@@@@@@@@@@@@@@@@@@@*--=+======::::+@@@@@@@*:::::::-----=----:::::::::
-                =+======+++++++**+=+@@@@@@@@@@@@@@@@@@@#+#%@@%@@@@@@@@@@@@@@#@@@@@@@@@@@@@%@@@%==---+=---==::::+@@@@@@@*:::::..::::-::-::-::::----
-                ========+++***+===-=@@@@@@@@@@@@@@@@@**+-::=#@@@@@@@@@@@@@@@#@@@@@@@@@@@@@@@*------=++-===-::::+@@@@@@@+:..::::::::::::::--:----==
-                ++++++=+++**+====-:-@@@@@@@@@@@@@@@#=-:::::::-*@@@@@@@@@@@@%#@@@@@@@@@@@@%+----=--=+++=-===::::=@@@#@@@+::::::::::::::::--==----=+
-                +*+++++++#+=-==-:::-%@@@@@@@@@@@#-:::::::::::-+*#@@@@@@@@####++%@@@@@@@%+==---====++++==--==:::=*-::::*+:::::::----::::::==+---==+
-                ********#+==+=:::::=#@@@@@%@@@+--:::-+*##**********#%#*######+=++++##++=====+=+++=+==========-::::::::::::::::--::--:::::-++=----=                                                                                                                                 \s""";
         System.out.println("________________________________________________________________________________________________________________________\n" +
                 "hello im \n" +
-                logo + "\n________________________________________________________________________________________________________________________\n" );
-        String userInput = "hi";
+                LOGO + "\n________________________________________________________________________________________________________________________\n" );
+        String userInput;
         TaskList list;
         list = Storage.loadList("data/list.txt");
 
@@ -120,19 +42,27 @@ public class Doot {
             parser.handleCommand(userInput);
         }
 
-        System.out.println("________________________________________________________________________________________________________________________\n" +
-                "thank mr skeltal\n" +
-                "________________________________________________________________________________________________________________________\n");
+        System.out.println("""
+                ________________________________________________________________________________________________________________________
+                thank mr skeltal
+                ________________________________________________________________________________________________________________________
+                """);
 
     }
 
+    //class for wrapping the nice lines around text to be printed
     public static class  UI {
+
+        //wraps text with underscores then print
+        //@param message the message to be printed
         public static void showMessage(String message) {
             System.out.println("________________________________________________________________________________________________________________________\n" +
                     message +
                     "\n________________________________________________________________________________________________________________________\n");        }
     }
 
+
+    //This class is for interpreting what the user means. It contains a Tasklist so it can edit it
     public static class Parser {
         private TaskList list;
 
@@ -140,6 +70,8 @@ public class Doot {
             this.list = list;
         }
 
+        //the main method, takes in the user input and converts it to commands
+        //@userInput the input by the user
         public void handleCommand(String userInput) {
             if (userInput.isEmpty()) {
                 UI.showMessage("say something I'm giving up on you");
@@ -164,6 +96,8 @@ public class Doot {
             }
         }
 
+        //called by the parser when the user enters something starting with mark. It sets the task in TaskList to be marked
+        //@param userInput the entire userinput is fed back in
         private void handleMark(String userInput) {
             int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
             if (isValidIndex(index)) {
@@ -175,6 +109,8 @@ public class Doot {
             }
         }
 
+        //sets the corresponding task as not completed
+        //@param userInput the user Input
         private void handleUnMark(String userInput) {
             int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
             if (isValidIndex(index)) {
@@ -186,6 +122,7 @@ public class Doot {
             }
         }
 
+        //It handles deletes
         private void handleDelete(String userInput) {
             int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
             if (isValidIndex(index)) {
@@ -198,6 +135,7 @@ public class Doot {
             }
         }
 
+        //it adds tasks to the tasklist as according to the userinput
         private void addTask(String userInput) {
             try {
                 list.addTask(userInput);
@@ -207,6 +145,7 @@ public class Doot {
             }
         }
 
+        //called after every command that edits the list, it saves the list using the Storage class
         private void saveList() {
             try {
                 Storage.saveList(list);
@@ -215,10 +154,13 @@ public class Doot {
             }
         }
 
+        //determines if the index is valid for commands like delete or mark, like if there are only 3 tasks the command
+        //unmark 4 will return a false
         private boolean isValidIndex(int index) {
             return index >= 0 && index < list.size();
         }
 
+        //determines if the command is a mark command, and if it is valid
         public static boolean isMark(String str) {
             if (str.startsWith("mark ") || str.startsWith("Mark ")) {
                 String[] arr = str.split(" ");
@@ -234,6 +176,7 @@ public class Doot {
             return false;
         }
 
+        //determines if this is an unmark command, and checks if it is valid
         public static boolean isUnMark(String str) {
             if (str.startsWith("unmark ") || str.startsWith("Unmark ")) {
                 String[] arr = str.split(" ");
@@ -250,18 +193,22 @@ public class Doot {
         }
     }
 
+    //the main structure that contains the tasks. Contains methods to modify the tasks' statuses
     public static class TaskList {
         private List<Task> arr;
         public TaskList() {
             arr = new ArrayList<>();
         }
 
+        //creates a new task from the userinput str, adds it to the list, and creates a message
         public void addTask(String str) throws InvalidFormatException {
             Task task = Task.makeTask(str);
             arr.add(task);
             UI.showMessage("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
         }
 
+        //loads tasks by running the strings needed from the file.
+        //@param File f is the file which contains the past commands used to make the list
         public void loadTask(File f) throws FileNotFoundException, InvalidFormatException {
             Scanner s = new Scanner(f);
             int count = 0;
@@ -280,6 +227,7 @@ public class Doot {
             }
         }
 
+        //returns the entire list, in the format used for printing as a list when called by the user
         public String returnList() {
             int count = 1;
             StringBuilder list = new StringBuilder();
@@ -290,6 +238,7 @@ public class Doot {
             return list.toString().trim();
         }
 
+        //used for saving. This assembles the creationString() of all tasks and seperates them in their own lines
         public String listData() {
             StringBuilder list = new StringBuilder();
             for (Task task : arr) {
@@ -298,36 +247,36 @@ public class Doot {
             return list.toString().trim();
         }
 
+        //gets the size of the list
         public int size() {
             return arr.size();
         }
 
+        //marks the task in the list
         public void mark(int num) {
             arr.get(num).setDone();
         }
 
+        //unmarks the task in the list
         public void unMark(int num) {
             arr.get(num).setUndone();
         }
 
+        //returns the corresponding task
         public Task getTask(int num) {
             return arr.get(num);
         }
 
+        //deletes the task
         public void removeTask(int num) {
             arr.remove(num);
         }
-
-        public void loadTasks(Scanner s) throws FileNotFoundException {
-            while (s.hasNext()) {
-
-            }
-        }
-
     }
 
     public enum Type {T, D, E}
 
+    //the class for storing information on individual tasks.
+    //contains state, description, type. This is an abstract class so that the more specific task classes can inherit
     public abstract static class Task {
         protected String description;
         protected boolean isDone;
@@ -339,6 +288,7 @@ public class Doot {
             this.isDone = false;
         }
 
+        //static class used to make a new class, then returns said class
         public static Task makeTask(String str) throws InvalidFormatException{
             String taskDescription = str.substring(str.indexOf(" ") + 1).trim();
             if (taskDescription.isEmpty()) {
@@ -395,48 +345,60 @@ public class Doot {
 
         public abstract String getType();
 
+        //contains the line needed to create a copy of this task
         public abstract String creationString();
 
+        //returns a string in the format to be passed to the UI to be printed for the user to see
         public String getDetails() {
             return this.getStatusIcon() + " " + this.getDescription();
         }
 
+        //returns the status of the task in a visually nicer manner
         public String getStatusIcon() {
             return "[" + (isDone ? "X" : " ") + "]"; // mark done task with X
         }
 
+        //gets description
         public String getDescription() {
             return description;
         }
 
+        //set task as complete
         public void setDone() {
             this.isDone = true;
         }
 
+        //set task as no complete
         public void setUndone() {
             this.isDone = false;
         }
 
+        //returns if the task is complete
         public boolean isDone() {
             return isDone;
         }
     }
 
+    //the subclass of task, specifically for the todo tasks
     public static class todoTask extends Task {
         public todoTask(String description) {
             super(description);
             type = Type.T;
         }
+
+        //determines type of task, like T for todo
         @Override
         public String getType() {
             return "[" +type.name() +"]";
         }
 
+        //returns details for todo objects
         @Override
         public String getDetails() {
             return this.getType() + this.getStatusIcon() + " " + this.getDescription();
         }
 
+        //the string necessary to make this object again
         @Override
         public String creationString() {
             StringBuilder list = new StringBuilder();
@@ -448,6 +410,8 @@ public class Doot {
             return list.toString();
         }
     }
+
+    //subclass of task, deadlinetask is the class for deadline tasks(wow)
     public static class DeadlineTask extends Task {
         protected String deadline;
         protected LocalDate datedeadline;
@@ -468,6 +432,8 @@ public class Doot {
             return "[" +type.name() +"]";
         }
 
+        //deadline tasks include information on the actual deadline. This method converts the localtime to a string format
+        //if there isnt a localtime, it just returns the string instead
         public String getDeadline() {
             return !(datedeadline == null) ? datedeadline.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : deadline;
         }
@@ -548,6 +514,7 @@ public class Doot {
         }
     }
 
+    //used for loading and saving lists.
     public static class Storage {
         public static void saveList(TaskList list) throws IOException {
             File folder = new File("data");
@@ -565,11 +532,13 @@ public class Doot {
             fw.close();
         }
 
+        //this just creates an empty list and saves it, to empty anything that used to be there
         public static void clearSave() throws IOException {
             TaskList list = new TaskList();
             Storage.saveList(list);
         }
-        
+
+        //loads a list saved to the file location. It also checks if the file exists or if it is corrupted
         public static TaskList loadList(String path) {
             File f = new File(path);
             TaskList list = new TaskList();
