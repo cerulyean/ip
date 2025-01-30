@@ -110,7 +110,7 @@ public class Doot {
                 "hello im \n" +
                 logo + "\n________________________________________________________________________________________________________________________\n" );
         String userInput = "hi";
-        TaskList list = new TaskList();
+        TaskList list;
         list = Storage.loadList("data/list.txt");
 
         Parser parser = new Parser(list);
@@ -170,6 +170,8 @@ public class Doot {
                 list.mark(index);
                 UI.showMessage("doot doot\n\n" + list.returnList());
                 saveList();
+            } else {
+                UI.showMessage("too big/too small number");
             }
         }
 
@@ -179,6 +181,8 @@ public class Doot {
                 list.unMark(index);
                 UI.showMessage("noot noot\n\n" + list.returnList());
                 saveList();
+            } else {
+                UI.showMessage("too big/too small number");
             }
         }
 
@@ -189,6 +193,8 @@ public class Doot {
                 list.removeTask(index);
                 UI.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size() + " more to do\n");
                 saveList();
+            } else {
+                UI.showMessage("too big/too small number");
             }
         }
 
@@ -410,6 +416,10 @@ public class Doot {
         public void setUndone() {
             this.isDone = false;
         }
+
+        public boolean isDone() {
+            return isDone;
+        }
     }
 
     public static class todoTask extends Task {
@@ -438,7 +448,6 @@ public class Doot {
             return list.toString();
         }
     }
-
     public static class DeadlineTask extends Task {
         protected String deadline;
         protected LocalDate datedeadline;
@@ -554,6 +563,11 @@ public class Doot {
             FileWriter fw = new FileWriter("data/list.txt");
             fw.write(list.listData());
             fw.close();
+        }
+
+        public static void clearSave() throws IOException {
+            TaskList list = new TaskList();
+            Storage.saveList(list);
         }
         
         public static TaskList loadList(String path) {
