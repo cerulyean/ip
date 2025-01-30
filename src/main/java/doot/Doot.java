@@ -91,6 +91,8 @@ public class Doot {
                 UI.showMessage(list.listData());
             } else if (userInput.equals("savedata")) {
                 saveList();
+            } else if (userInput.startsWith("find ")) {
+                handleFind(userInput);
             } else {
                 addTask(userInput);
             }
@@ -191,6 +193,21 @@ public class Doot {
             }
             return false;
         }
+
+        //just runs the searchWord() method for TaskList
+        public void handleFind(String str) {
+            String text = str.substring(5).strip();
+            if (text.equals("")) {
+                UI.showMessage("put something after the find");
+            } else {
+                String found = list.searchWord(text);
+                if (found.equals("")) {
+                    UI.showMessage("nothing found");
+                } else {
+                    UI.showMessage(found);
+                }
+            }
+        }
     }
 
     //the main structure that contains the tasks. Contains methods to modify the tasks' statuses
@@ -271,6 +288,17 @@ public class Doot {
         public void removeTask(int num) {
             arr.remove(num);
         }
+
+        //returns the details of all tasks that has the str within their description
+        public String searchWord(String str) {
+            StringBuilder list = new StringBuilder();
+            for (int i = 0; i < this.size(); i++) {
+                if (this.getTask(i).isSubstring(str)) {
+                    list.append(this.getTask(i).getDetails()).append("\n");
+                }
+            }
+            return list.toString().strip();
+        }
     }
 
     public enum Type {T, D, E}
@@ -341,6 +369,11 @@ public class Doot {
             } else {
                 throw new InvalidFormatException("dumbass");
             }
+        }
+
+        //checks if the str is a substring of the description
+        public boolean isSubstring(String str) {
+            return this.description.contains(str);
         }
 
         public abstract String getType();
