@@ -2,7 +2,9 @@ package doot;
 
 import java.io.IOException;
 
-//This class is for interpreting what the user means. It contains a Tasklist so it can edit it
+/**
+ * This class is for interpreting what the user means. It contains a Tasklist so it can edit it
+ */
 public class Parser {
     private TaskList list;
 
@@ -10,8 +12,10 @@ public class Parser {
         this.list = list;
     }
 
-    //the main method, takes in the user input and converts it to commands
-    //@userInput the input by the user
+    /**
+     * Interprets the input int he paramter as a user command, and delegates the task
+     * @param userInput comes from what user enters into the terminal
+     */
     public void handleCommand(String userInput) {
         if (userInput.isEmpty()) {
             Ui.showMessage("say something I'm giving up on you");
@@ -70,24 +74,30 @@ public class Parser {
         if (isValidIndex(index)) {
             Task removed = list.getTask(index);
             list.removeTask(index);
-            Ui.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size() + " more to do\n");
+            Ui.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
+                    + " more to do\n");
             saveList();
         } else {
             Ui.showMessage("too big/too small number");
         }
     }
 
-    //it adds tasks to the tasklist as according to the userinput
+    /**
+     * it adds tasks to the tasklist as according to the userinput
+     * @param userInput is exactly what the user input
+     */
     private void addTask(String userInput) {
         try {
             list.addTask(userInput);
             saveList();
-        } catch (Doot.InvalidFormatException e) {
+        } catch (InvalidFormatException e) {
             Ui.showMessage(e.toString());
         }
     }
 
-    //called after every command that edits the list, it saves the list using the Storage class
+    /**
+     * called after every command that edits the list, it saves the list using the Storage class
+     */
     private void saveList() {
         try {
             Storage.saveList(list);
@@ -96,13 +106,21 @@ public class Parser {
         }
     }
 
-    //determines if the index is valid for commands like delete or mark, like if there are only 3 tasks the command
-    //unmark 4 will return a false
+    /**
+     * determines if the index is valid for commands like delete or mark, like if there are only 3 tasks the command
+     * unmark 4 will return a false
+     * @param index is the task the user wants unmarked
+     * @return whether that index is valid
+     */
     private boolean isValidIndex(int index) {
         return index >= 0 && index < list.size();
     }
 
-    //determines if the command is a mark command, and if it is valid
+    /**
+     * determines if the command is a mark command, and if it is valid
+     * @param str it takes in the entire userInput
+     * @return whether it is a mark command
+     */
     public static boolean isMark(String str) {
         if (str.startsWith("mark ") || str.startsWith("Mark ")) {
             String[] arr = str.split(" ");
@@ -118,7 +136,11 @@ public class Parser {
         return false;
     }
 
-    //determines if this is an unmark command, and checks if it is valid
+    /**
+     * determines if this is an unmark command, and checks if it is valid
+     * @param str entire userinput
+     * @return whether it is a valid unmark command
+     */
     public static boolean isUnMark(String str) {
         if (str.startsWith("unmark ") || str.startsWith("Unmark ")) {
             String[] arr = str.split(" ");
@@ -134,7 +156,10 @@ public class Parser {
         return false;
     }
 
-    //just runs the searchWord() method for TaskList
+    /**
+     * just runs the searchWord() method for TaskList
+     * @param str its the userinput
+     */
     public void handleFind(String str) {
         String text = str.substring(5).strip();
         if (text.equals("")) {

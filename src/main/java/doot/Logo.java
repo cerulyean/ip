@@ -1,5 +1,8 @@
 package doot;
 
+/**
+ * Its the logo you print at the start
+ */
 public class Logo {
     public static final String LOGO = """
                                                                                                                                                  \s

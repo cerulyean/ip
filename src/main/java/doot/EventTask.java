@@ -5,14 +5,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Used for tasks of the Event type, extending from task
+ */
 public class EventTask extends Task {
     protected String start;
     protected String end;
-
     protected LocalDate datestart;
-
     protected LocalDate dateend;
 
+    /**
+     * Creates a EventTask object which has the attributes of the given parameters
+     * @param description of the task
+     * @param start start of the event, saved as LocalDate if possible, otherwise saved as a String
+     * @param end end of the event, saved as LocalDate if possible, otherwise saved as a String
+     */
     public EventTask(String description, String start, String end) {
         super(description);
         this.type = Type.E;
@@ -21,13 +28,14 @@ public class EventTask extends Task {
 
 
 
-        for (String format : Doot.formats) {
+        for (String format : FormatConstants.DATE_FORMATS) {
             try {
-                this.datestart = LocalDate.from(LocalDate.parse(start, DateTimeFormatter.ofPattern(format)).atStartOfDay());
+                this.datestart = LocalDate.from(LocalDate.parse(start,
+                        DateTimeFormatter.ofPattern(format)).atStartOfDay());
             } catch (DateTimeParseException ignored) {
             }
         }
-        for (String format : Doot.formats) {
+        for (String format : FormatConstants.DATE_FORMATS) {
             try {
                 this.dateend = LocalDate.from(LocalDate.parse(end, DateTimeFormatter.ofPattern(format)).atStartOfDay());
             } catch (DateTimeParseException ignored) {
@@ -37,12 +45,13 @@ public class EventTask extends Task {
 
     @Override
     public String getType() {
-        return "[" +type.name() +"]";
+        return "[" + type.name() + "]";
     }
 
     @Override
     public String getDetails() {
-        return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (from: " + getStart() + " to: " + getEnd() + ")";
+        return this.getType() + this.getStatusIcon() + " " + this.getDescription()
+                + " (from: " + getStart() + " to: " + getEnd() + ")";
     }
 
     public String getStart() {
@@ -64,4 +73,3 @@ public class EventTask extends Task {
         return list.toString();
     }
 }
-

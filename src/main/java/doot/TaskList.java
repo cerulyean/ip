@@ -13,7 +13,7 @@ public class TaskList {
     }
 
     //creates a new task from the userinput str, adds it to the list, and creates a message
-    public void addTask(String str) throws Doot.InvalidFormatException {
+    public void addTask(String str) throws InvalidFormatException {
         Task task = Task.makeTask(str);
         arr.add(task);
         Ui.showMessage("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
@@ -21,7 +21,7 @@ public class TaskList {
 
     //loads tasks by running the strings needed from the file.
     //@param File f is the file which contains the past commands used to make the list
-    public void loadTask(File f) throws FileNotFoundException, Doot.InvalidFormatException {
+    public void loadTask(File f) throws FileNotFoundException, InvalidFormatException {
         Scanner s = new Scanner(f);
         int count = 0;
         while (s.hasNext()) {

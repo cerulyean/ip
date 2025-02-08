@@ -14,57 +14,57 @@ public abstract class Task {
     }
 
     //static class used to make a new class, then returns said class
-    public static Task makeTask(String str) throws Doot.InvalidFormatException {
+    public static Task makeTask(String str) throws InvalidFormatException {
         String taskDescription = str.substring(str.indexOf(" ") + 1).trim();
         if (taskDescription.isEmpty()) {
-            throw new Doot.InvalidFormatException("tasj must have description at back nothing added doot doot");
+            throw new InvalidFormatException("tasj must have description at back nothing added doot doot");
         }
 
         if (str.startsWith("todo ")) {
             return new TodoTask(str.substring(str.indexOf(" ") + 1));
         } else if (str.startsWith("deadline ")) {
             if (!str.contains("/by")) {
-                throw new Doot.InvalidFormatException("deadline needs /by weak bone man");
+                throw new InvalidFormatException("deadline needs /by weak bone man");
             }
             String deadline = str.substring(str.indexOf("/by") + 4);
             if (deadline.equals("-1") || !str.contains("/by")) {
-                throw new Doot.InvalidFormatException("pls /by correctly");
+                throw new InvalidFormatException("pls /by correctly");
             }
             if (str.indexOf("/by") - 2 - str.indexOf(" ") < 1) {
-                throw new Doot.InvalidFormatException("u need sumting between deadline and /by");
+                throw new InvalidFormatException("u need sumting between deadline and /by");
             }
             return new DeadlineTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/by") - 1), deadline);
         } else if (str.startsWith("event ")) {
             if (!str.contains("/from") || !str.contains("/to")) {
-                throw new Doot.InvalidFormatException("need /from and /to keyword for event doot doot");
+                throw new InvalidFormatException("need /from and /to keyword for event doot doot");
             }
 
             if (str.indexOf("/from") - 2 - str.indexOf(" ") < 1) {
-                throw new Doot.InvalidFormatException("u need sumting between event and /from");
+                throw new InvalidFormatException("u need sumting between event and /from");
             }
 
             if (str.indexOf("/from") > str.indexOf("/to")) {
-                throw new Doot.InvalidFormatException("/from before /to u dum");
+                throw new InvalidFormatException("/from before /to u dum");
             }
 
             if (str.indexOf("/from") + 6 > str.indexOf("/to") - 1) {
-                throw new Doot.InvalidFormatException("oop you fuked up go put something between /from and /to");
+                throw new InvalidFormatException("oop you fuked up go put something between /from and /to");
             }
 
             if (str.length() <= str.indexOf("/to") + 3) {
-                throw new Doot.InvalidFormatException("doot doot go put something behind /to space works also ");
+                throw new InvalidFormatException("doot doot go put something behind /to space works also ");
             }
 
             String start = str.substring(str.indexOf("/from") + 6, str.indexOf("/to") - 1);
             String end = str.substring(str.indexOf("/to") + 4);
             if (start.equals("-1") || end.equals("-1")) {
-                throw new Doot.InvalidFormatException("/from /to formatting wrong bet you have osteoporosis");
+                throw new InvalidFormatException("/from /to formatting wrong bet you have osteoporosis");
             }
             return new EventTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/from") - 1),
                     start,
                     end);
         } else {
-            throw new Doot.InvalidFormatException("dumbass");
+            throw new InvalidFormatException("dumbass");
         }
     }
 
@@ -108,4 +108,3 @@ public abstract class Task {
         return isDone;
     }
 }
-
