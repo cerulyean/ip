@@ -32,19 +32,22 @@ public class Parser {
             Ui.showMessage(message);
             return message;
         } else if (Parser.isMark(userInput)) {
-            handleMark(userInput);
+             message = handleMark(userInput);
+             return message;
         } else if (Parser.isUnMark(userInput)) {
-            handleUnMark(userInput);
+            message = handleUnMark(userInput);
+            return message;
         } else if (userInput.startsWith("delete ")) {
-            handleDelete(userInput);
+            message = handleDelete(userInput);
+            return message;
         } else if (userInput.equals("listData")) {
-            Ui.showMessage(list.listData());
-        } else if (userInput.equals("savedata")) {
-            saveList();
+            message = list.listData();
+            Ui.showMessage(message);
+            return message;
         } else if (userInput.startsWith("find ")) {
-            handleFind(userInput);
+            return handleFind(userInput);
         } else {
-            addTask(userInput);
+            return addTask(userInput);
         }
     }
 
@@ -118,7 +121,7 @@ public class Parser {
             return temp;
         } catch (InvalidFormatException e) {
             Ui.showMessage(e.toString());
-            return "e";
+            return e.toString();
         } catch (IOException e) {
             return "ioexception, save went wrong" + e;
         }

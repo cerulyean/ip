@@ -47,7 +47,7 @@ public class Doot {
     }
 
     public String getResponse(String input) {
-        return "mr skeltal heard: " + input;
+        return parser.handleCommand(input);
     }
 
     public String getIntro() {
