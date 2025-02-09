@@ -1,7 +1,5 @@
 package doot;
 
-import doot.Doot.*;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -29,7 +27,7 @@ public class DootTest {
 
     @Test
     void testPrintMethod() {
-        Doot.UI.showMessage("test"); // Call the method that prints output
+        Ui.showMessage("test"); // Call the method that prints output
         assertEquals("________________________________________________________________________________________________________________________\n" +
                 "test" +
                 "\n________________________________________________________________________________________________________________________\n\n", outputStream.toString().replace("\r", ""));
@@ -42,7 +40,7 @@ public class DootTest {
         boolean outputFound = false;
 
         for (int i = 0; i < maxAttempts; i++) {
-            Doot.UI.showMessage("test " + i);  // Call the method that prints output
+            Ui.showMessage("test " + i);  // Call the method that prints output
             Thread.sleep(100);  // Optional: Delay to let the output appear
 
             // Print the current output to the console so you can see it
@@ -59,23 +57,23 @@ public class DootTest {
     }
 
     @Test
-    void testAddTask() throws Doot.InvalidFormatException {
-        Doot.TaskList taskList = new Doot.TaskList();
-        Doot.Parser parser = new Doot.Parser(taskList);
+    void testAddTask() throws InvalidFormatException {
+        TaskList taskList = new TaskList();
+        Parser parser = new Parser(taskList);
 
         // Test adding a task (for example, a todo task)
         parser.handleCommand("todo Task 1");
 
         assertEquals(1, taskList.size(), "Task count should be 1");
-        assertTrue(taskList.getTask(0) instanceof Doot.todoTask, "The first task should be a todo task");
+        assertTrue(taskList.getTask(0) instanceof TodoTask, "The first task should be a todo task");
     }
 
     @Test
-    void testMarkTask() throws Doot.InvalidFormatException, IOException {
-        Doot.TaskList taskList = new Doot.TaskList();
-        Doot.Parser parser = new Doot.Parser(taskList);
+    void testMarkTask() throws InvalidFormatException, IOException {
+        TaskList taskList = new TaskList();
+        Parser parser = new Parser(taskList);
 
-        Doot.Storage.clearSave();
+        Storage.clearSave();
         parser.handleCommand("todo Task 1"); // Add task
         parser.handleCommand("todo piss 3");
 
@@ -85,7 +83,7 @@ public class DootTest {
     }
 
     @Test
-    void testUnMarkTask() throws Doot.InvalidFormatException, IOException {
+    void testUnMarkTask() throws InvalidFormatException, IOException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
         Storage.clearSave();
