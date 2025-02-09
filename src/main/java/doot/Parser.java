@@ -108,15 +108,19 @@ public class Parser {
     }
 
     /**
-     * it adds tasks to the tasklist as according to the userinput
+     * it adds tasks to the tasklist as according to the userinput, will call TaskList's addTask
      * @param userInput is exactly what the user input
      */
-    private void addTask(String userInput) {
+    private String addTask(String userInput) {
         try {
-            list.addTask(userInput);
+            String temp = list.addTask(userInput);
             saveList();
+            return temp;
         } catch (InvalidFormatException e) {
             Ui.showMessage(e.toString());
+            return "e";
+        } catch (IOException e) {
+            return "ioexception, save went wrong" + e;
         }
     }
 
@@ -181,16 +185,19 @@ public class Parser {
      * just runs the searchWord() method for TaskList
      * @param str its the userinput
      */
-    public void handleFind(String str) {
+    public String handleFind(String str) {
         String text = str.substring(5).strip();
         if (text.equals("")) {
             Ui.showMessage("put something after the find");
+            return "put something after the find";
         } else {
             String found = list.searchWord(text);
             if (found.equals("")) {
                 Ui.showMessage("nothing found");
+                return "nothing found";
             } else {
                 Ui.showMessage(found);
+                return found;
             }
         }
     }

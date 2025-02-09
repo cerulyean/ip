@@ -13,10 +13,11 @@ public class TaskList {
     }
 
     //creates a new task from the userinput str, adds it to the list, and creates a message
-    public void addTask(String str) throws InvalidFormatException {
+    public String addTask(String str) throws InvalidFormatException {
         Task task = Task.makeTask(str);
         arr.add(task);
         Ui.showMessage("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
+        return "task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list";
     }
 
     //loads tasks by running the strings needed from the file.
