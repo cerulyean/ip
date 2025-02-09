@@ -1,0 +1,5 @@
+todo aoi
+d deadline test3 /by sunday
+event test5 /from day1 /to day2
+event test6 /from 15 Oct, 2019 /to 15 Oct, 2019
+event test7 /from 2019-10-15 /to 2019-10-15

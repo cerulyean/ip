@@ -8,6 +8,20 @@ import java.util.Scanner;
  * Main Class for the Doot program
  */
 public class Doot {
+    public TaskList list;
+    Parser parser;
+    Scanner scanner;
+
+
+    public Doot() {
+        scanner = new Scanner(System.in);
+        TaskList list;
+        list = Storage.loadList("data/list.txt");
+        parser = new Parser(list);
+    }
+
+
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("________________________________________________________________________________________________________________________\n"
@@ -30,5 +44,13 @@ public class Doot {
                 ________________________________________________________________________________________________________________________
                 """);
 
+    }
+
+    public String getResponse(String input) {
+        return "mr skeltal heard: " + input;
+    }
+
+    public String getIntro() {
+        return "hello im mr skeltal";
     }
 }
