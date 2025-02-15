@@ -9,6 +9,7 @@ public class Parser {
     private TaskList list;
 
     public Parser(TaskList list) {
+        assert list != null: "primary tasklist shouldnt be null. Under Parser constructor";
         this.list = list;
     }
 
@@ -17,6 +18,7 @@ public class Parser {
      * @param userInput comes from what user enters into the terminal
      */
     public String handleCommand(String userInput) {
+        assert userInput != null: "userinput under Parser.handleCommand is null, something went wrong";
         String message;
         if (userInput.isEmpty()) {
             Ui.showMessage("say something I'm giving up on you");
