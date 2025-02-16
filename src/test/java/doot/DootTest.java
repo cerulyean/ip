@@ -28,27 +28,29 @@ public class DootTest {
     @Test
     void testPrintMethod() {
         Ui.showMessage("test"); // Call the method that prints output
-        assertEquals("________________________________________________________________________________________________________________________\n" +
-                "test" +
-                "\n________________________________________________________________________________________________________________________\n\n", outputStream.toString().replace("\r", ""));
+        assertEquals("""
+                ________________________________________________________________________________________________________________________
+                test\
+                
+                ________________________________________________________________________________________________________________________
+                
+                """, outputStream.toString().replace("\r", ""));
     }
 
     @Test
     void clearLists() throws InterruptedException {
         int maxAttempts = 5;
         String expectedOutput = "too big/too small number";
-        boolean outputFound = false;
 
         for (int i = 0; i < maxAttempts; i++) {
             Ui.showMessage("test " + i);  // Call the method that prints output
             Thread.sleep(100);  // Optional: Delay to let the output appear
 
             // Print the current output to the console so you can see it
-            System.out.println("Current output: " + outputStream.toString());
+            System.out.println("Current output: " + outputStream);
 
             // Check if the expected output appears
             if (outputStream.toString().contains(expectedOutput)) {
-                outputFound = true;
                 break;
             }
 
@@ -57,7 +59,7 @@ public class DootTest {
     }
 
     @Test
-    void testAddTask() throws InvalidFormatException {
+    void testAddTask() {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
 
@@ -65,11 +67,11 @@ public class DootTest {
         parser.handleCommand("todo Task 1");
 
         assertEquals(1, taskList.size(), "Task count should be 1");
-        assertTrue(taskList.getTask(0) instanceof TodoTask, "The first task should be a todo task");
+        assertInstanceOf(TodoTask.class, taskList.getTask(0), "The first task should be a todo task");
     }
 
     @Test
-    void testMarkTask() throws InvalidFormatException, IOException {
+    void testMarkTask() throws IOException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
 
@@ -83,7 +85,7 @@ public class DootTest {
     }
 
     @Test
-    void testUnMarkTask() throws InvalidFormatException, IOException {
+    void testUnMarkTask() throws IOException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
         Storage.clearSave();
@@ -96,7 +98,7 @@ public class DootTest {
     }
 
     @Test
-    void testDeleteTask() throws InvalidFormatException, IOException {
+    void testDeleteTask() throws IOException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
         Storage.clearSave();
