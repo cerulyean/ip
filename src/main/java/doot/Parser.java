@@ -1,5 +1,7 @@
 package doot;
 
+import doot.commands.*;
+
 import java.io.IOException;
 
 /**
@@ -13,7 +15,7 @@ public class Parser {
     }
 
     /**
-     * Interprets the input int he paramter as a user command, and delegates the task
+     * Interprets the input in the parameter as a user command, and delegates the task
      * @param userInput comes from what user enters into the terminal
      */
     public String handleCommand(String userInput) {
@@ -54,60 +56,67 @@ public class Parser {
     //called by the parser when the user enters something starting with mark. It sets the task in TaskList to be marked
     //@param userInput the entire userinput is fed back in
     private String handleMark(String userInput) {
-        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
-        if (isValidIndex(index)) {
-            list.mark(index);
-            Ui.showMessage("doot doot\n\n" + list.returnList());
-            try {
-                saveList();
-                return "doot doot\n\n" + list.returnList();
-            } catch (IOException e) {
-                return "file cant be saved\n" + e;
-            }
-        } else {
-            Ui.showMessage("too big/too small number");
-            return "too big/too small number";
-        }
+//        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+//        if (isValidIndex(index, list)) {
+//            list.mark(index);
+//            Ui.showMessage("doot doot\n\n" + list.returnList());
+//            try {
+//                saveList();
+//                return "doot doot\n\n" + list.returnList();
+//            } catch (IOException e) {
+//                return "file cant be saved\n" + e;
+//            }
+//        } else {
+//            Ui.showMessage("too big/too small number");
+//            return "too big/too small number";
+//        }
+        HandleMarkCommand handleMark = new HandleMarkCommand(userInput, list);
+        return handleMark.execute();
+
     }
 
     //sets the corresponding task as not completed
     //@param userInput the user Input
     private String handleUnMark(String userInput) {
-        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
-        if (isValidIndex(index)) {
-            list.unMark(index);
-            Ui.showMessage("noot noot\n\n" + list.returnList());
-            try {
-                saveList();
-                return "doot doot\n\n" + list.returnList();
-            } catch (IOException e) {
-                return "file cant be saved\n" + e;
-            }
-        } else {
-            Ui.showMessage("too big/too small number");
-            return "too big/too small number";
-        }
+//        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+//        if (isValidIndex(index, list)) {
+//            list.unMark(index);
+//            Ui.showMessage("noot noot\n\n" + list.returnList());
+//            try {
+//                saveList();
+//                return "doot doot\n\n" + list.returnList();
+//            } catch (IOException e) {
+//                return "file cant be saved\n" + e;
+//            }
+//        } else {
+//            Ui.showMessage("too big/too small number");
+//            return "too big/too small number";
+//        }
+        HandleUnmarkCommand handleUnmark = new HandleUnmarkCommand(userInput, list);
+        return handleUnmark.execute();
     }
 
     //It handles deletes
     private String handleDelete(String userInput) {
-        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
-        if (isValidIndex(index)) {
-            Task removed = list.getTask(index);
-            list.removeTask(index);
-            Ui.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
-                    + " more to do\n");
-            try {
-                saveList();
-                return "calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
-                        + " more to do\n";
-            } catch (IOException e) {
-                return "file cant be saved\n" + e;
-            }
-        } else {
-            Ui.showMessage("too big/too small number");
-            return "too big/too small number";
-        }
+//        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+//        if (isValidIndex(index, list)) {
+//            Task removed = list.getTask(index);
+//            list.removeTask(index);
+//            Ui.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
+//                    + " more to do\n");
+//            try {
+//                saveList();
+//                return "calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
+//                        + " more to do\n";
+//            } catch (IOException e) {
+//                return "file cant be saved\n" + e;
+//            }
+//        } else {
+//            Ui.showMessage("too big/too small number");
+//            return "too big/too small number";
+//        }
+        HandleDeleteCommand handleDelete = new HandleDeleteCommand(list, userInput);
+        return handleDelete.execute();
     }
 
     /**
@@ -115,16 +124,18 @@ public class Parser {
      * @param userInput is exactly what the user input
      */
     private String addTask(String userInput) {
-        try {
-            String temp = list.addTask(userInput);
-            saveList();
-            return temp;
-        } catch (InvalidFormatException e) {
-            Ui.showMessage(e.toString());
-            return e.toString();
-        } catch (IOException e) {
-            return "ioexception, save went wrong" + e;
-        }
+//        try {
+//            String temp = list.addTask(userInput);
+//            saveList();
+//            return temp;
+//        } catch (InvalidFormatException e) {
+//            Ui.showMessage(e.toString());
+//            return e.toString();
+//        } catch (IOException e) {
+//            return "ioexception, save went wrong" + e;
+//        }
+        AddTaskCommand addTask = new AddTaskCommand(list, userInput);
+        return addTask.execute();
     }
 
     /**
@@ -140,7 +151,7 @@ public class Parser {
      * @param index is the task the user wants unmarked
      * @return whether that index is valid
      */
-    private boolean isValidIndex(int index) {
+    public static boolean isValidIndex(int index, TaskList list) {
         return index >= 0 && index < list.size();
     }
 
@@ -186,22 +197,10 @@ public class Parser {
 
     /**
      * just runs the searchWord() method for TaskList
-     * @param str its the userinput
+     * @param userInput its the userinput
      */
-    public String handleFind(String str) {
-        String text = str.substring(5).strip();
-        if (text.equals("")) {
-            Ui.showMessage("put something after the find");
-            return "put something after the find";
-        } else {
-            String found = list.searchWord(text);
-            if (found.equals("")) {
-                Ui.showMessage("nothing found");
-                return "nothing found";
-            } else {
-                Ui.showMessage(found);
-                return found;
-            }
-        }
+    public String handleFind(String userInput) {
+        HandleFindCommand handleFind = new HandleFindCommand(list, userInput);
+        return handleFind.execute();
     }
 }
