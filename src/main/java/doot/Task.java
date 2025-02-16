@@ -15,57 +15,20 @@ public abstract class Task {
 
     //static class used to make a new class, then returns said class
     public static Task makeTask(String str) throws InvalidFormatException {
-        String taskDescription = str.substring(str.indexOf(" ") + 1).trim();
-        if (taskDescription.isEmpty()) {
-            throw new InvalidFormatException("tasj must have description at back nothing added doot doot");
+        String[] parts = str.split(" ", 2); // Split at first space
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new InvalidFormatException("Task must have a description. Nothing added, doot doot.");
         }
 
-        if (str.startsWith("todo ")) {
-            return new TodoTask(str.substring(str.indexOf(" ") + 1));
-        } else if (str.startsWith("deadline ")) {
-            if (!str.contains("/by")) {
-                throw new InvalidFormatException("deadline needs /by weak bone man");
-            }
-            String deadline = str.substring(str.indexOf("/by") + 4);
-            if (deadline.equals("-1") || !str.contains("/by")) {
-                throw new InvalidFormatException("pls /by correctly");
-            }
-            if (str.indexOf("/by") - 2 - str.indexOf(" ") < 1) {
-                throw new InvalidFormatException("u need sumting between deadline and /by");
-            }
-            return new DeadlineTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/by") - 1), deadline);
-        } else if (str.startsWith("event ")) {
-            if (!str.contains("/from") || !str.contains("/to")) {
-                throw new InvalidFormatException("need /from and /to keyword for event doot doot");
-            }
+        String type = parts[0];
+        String details = parts[1].trim();
 
-            if (str.indexOf("/from") - 2 - str.indexOf(" ") < 1) {
-                throw new InvalidFormatException("u need sumting between event and /from");
-            }
-
-            if (str.indexOf("/from") > str.indexOf("/to")) {
-                throw new InvalidFormatException("/from before /to u dum");
-            }
-
-            if (str.indexOf("/from") + 6 > str.indexOf("/to") - 1) {
-                throw new InvalidFormatException("oop you fuked up go put something between /from and /to");
-            }
-
-            if (str.length() <= str.indexOf("/to") + 3) {
-                throw new InvalidFormatException("doot doot go put something behind /to space works also ");
-            }
-
-            String start = str.substring(str.indexOf("/from") + 6, str.indexOf("/to") - 1);
-            String end = str.substring(str.indexOf("/to") + 4);
-            if (start.equals("-1") || end.equals("-1")) {
-                throw new InvalidFormatException("/from /to formatting wrong bet you have osteoporosis");
-            }
-            return new EventTask(str.substring(str.indexOf(" ") + 1, str.indexOf("/from") - 1),
-                    start,
-                    end);
-        } else {
-            throw new InvalidFormatException("dumbass");
-        }
+        return switch (type) {
+            case "todo" -> new TodoTask(details);
+            case "deadline" -> Parser.parseDeadline(details);
+            case "event" -> Parser.parseEvent(details);
+            default -> throw new InvalidFormatException("Invalid task type, dumbass.");
+        };
     }
 
     //checks if the str is a substring of the description
