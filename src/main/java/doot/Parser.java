@@ -2,8 +2,6 @@ package doot;
 
 import doot.commands.*;
 
-import java.io.IOException;
-
 /**
  * This class is for interpreting what the user means. It contains a Tasklist so it can edit it
  */
@@ -63,20 +61,6 @@ public class Parser {
      */
     public static boolean isValidIndex(int index, TaskList list) {
         return index >= 0 && index < list.size();
-    }
-
-    public static boolean isValidToDo(String userInput) throws InvalidFormatException {
-        if (!userInput.contains("/by")) {
-            throw new InvalidFormatException("deadline needs /by weak bone man");
-        }
-        String deadline = userInput.substring(userInput.indexOf("/by") + 4);
-        if (deadline.equals("-1") || !userInput.contains("/by")) {
-            throw new InvalidFormatException("pls /by correctly");
-        }
-        if (userInput.indexOf("/by") - 2 - userInput.indexOf(" ") < 1) {
-            throw new InvalidFormatException("u need sumting between deadline and /by");
-        }
-        return true;
     }
 
     /**
