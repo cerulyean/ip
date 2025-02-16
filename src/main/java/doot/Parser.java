@@ -19,131 +19,41 @@ public class Parser {
      * @param userInput comes from what user enters into the terminal
      */
     public String handleCommand(String userInput) {
-        String message;
         if (userInput.isEmpty()) {
-            Ui.showMessage("say something I'm giving up on you");
-            return "say something I'm giving up on you";
-        } else if (userInput.equals("thank mr skeltal")) {
-            Ui.showMessage("good bones and calcium will come to you");
-            return "good bones and calcium will come to you";
-        } else if (userInput.equals("doot doot")) {
-            Ui.showMessage("doot doot");
-            return "doot doot";
-        } else if (userInput.equals("list")) {
-            message = list.returnList();
-            Ui.showMessage(message);
-            return message;
-        } else if (Parser.isMark(userInput)) {
-             message = handleMark(userInput);
-             return message;
-        } else if (Parser.isUnMark(userInput)) {
-            message = handleUnMark(userInput);
-            return message;
-        } else if (userInput.startsWith("delete ")) {
-            message = handleDelete(userInput);
-            return message;
-        } else if (userInput.equals("listData")) {
-            message = list.listData();
-            Ui.showMessage(message);
-            return message;
-        } else if (userInput.startsWith("find ")) {
-            return handleFind(userInput);
-        } else {
-            return addTask(userInput);
+            return respond("say something I'm giving up on you");
         }
+
+        return switch (userInput) {
+            case "thank mr skeltal" -> respond("good bones and calcium will come to you");
+            case "doot doot" -> respond("doot doot");
+            case "list" -> respond(list.returnList());
+            case "listData" -> respond(list.listData());
+            default -> handleDynamicCommands(userInput);
+        };
     }
 
-    //called by the parser when the user enters something starting with mark. It sets the task in TaskList to be marked
-    //@param userInput the entire userinput is fed back in
-    private String handleMark(String userInput) {
-//        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
-//        if (isValidIndex(index, list)) {
-//            list.mark(index);
-//            Ui.showMessage("doot doot\n\n" + list.returnList());
-//            try {
-//                saveList();
-//                return "doot doot\n\n" + list.returnList();
-//            } catch (IOException e) {
-//                return "file cant be saved\n" + e;
-//            }
-//        } else {
-//            Ui.showMessage("too big/too small number");
-//            return "too big/too small number";
-//        }
-        HandleMarkCommand handleMark = new HandleMarkCommand(userInput, list);
-        return handleMark.execute();
-
+    private String handleDynamicCommands(String userInput) {
+        if (Parser.isMark(userInput)) {
+            return new HandleMarkCommand(userInput, list).execute();
+        }
+        if (Parser.isUnMark(userInput)) {
+            return new HandleUnmarkCommand(userInput, list).execute();
+        }
+        if (userInput.startsWith("delete ")) {
+            return new HandleDeleteCommand(list, userInput).execute();
+        }
+        if (userInput.startsWith("find ")) {
+            return new HandleFindCommand(list, userInput).execute();
+        }
+        return new AddTaskCommand(list, userInput).execute();
     }
 
-    //sets the corresponding task as not completed
-    //@param userInput the user Input
-    private String handleUnMark(String userInput) {
-//        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
-//        if (isValidIndex(index, list)) {
-//            list.unMark(index);
-//            Ui.showMessage("noot noot\n\n" + list.returnList());
-//            try {
-//                saveList();
-//                return "doot doot\n\n" + list.returnList();
-//            } catch (IOException e) {
-//                return "file cant be saved\n" + e;
-//            }
-//        } else {
-//            Ui.showMessage("too big/too small number");
-//            return "too big/too small number";
-//        }
-        HandleUnmarkCommand handleUnmark = new HandleUnmarkCommand(userInput, list);
-        return handleUnmark.execute();
+    private String respond(String message) {
+        Ui.showMessage(message);
+        return message;
     }
 
-    //It handles deletes
-    private String handleDelete(String userInput) {
-//        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
-//        if (isValidIndex(index, list)) {
-//            Task removed = list.getTask(index);
-//            list.removeTask(index);
-//            Ui.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
-//                    + " more to do\n");
-//            try {
-//                saveList();
-//                return "calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
-//                        + " more to do\n";
-//            } catch (IOException e) {
-//                return "file cant be saved\n" + e;
-//            }
-//        } else {
-//            Ui.showMessage("too big/too small number");
-//            return "too big/too small number";
-//        }
-        HandleDeleteCommand handleDelete = new HandleDeleteCommand(list, userInput);
-        return handleDelete.execute();
-    }
 
-    /**
-     * it adds tasks to the tasklist as according to the userinput, will call TaskList's addTask
-     * @param userInput is exactly what the user input
-     */
-    private String addTask(String userInput) {
-//        try {
-//            String temp = list.addTask(userInput);
-//            saveList();
-//            return temp;
-//        } catch (InvalidFormatException e) {
-//            Ui.showMessage(e.toString());
-//            return e.toString();
-//        } catch (IOException e) {
-//            return "ioexception, save went wrong" + e;
-//        }
-        AddTaskCommand addTask = new AddTaskCommand(list, userInput);
-        return addTask.execute();
-    }
-
-    /**
-     * called after every command that edits the list, it saves the list using the Storage class
-     */
-    private void saveList() throws IOException{
-        Storage.saveList(list);
-    }
 
     /**
      * determines if the index is valid for commands like delete or mark, like if there are only 3 tasks the command
@@ -153,6 +63,20 @@ public class Parser {
      */
     public static boolean isValidIndex(int index, TaskList list) {
         return index >= 0 && index < list.size();
+    }
+
+    public static boolean isValidToDo(String userInput) throws InvalidFormatException {
+        if (!userInput.contains("/by")) {
+            throw new InvalidFormatException("deadline needs /by weak bone man");
+        }
+        String deadline = userInput.substring(userInput.indexOf("/by") + 4);
+        if (deadline.equals("-1") || !userInput.contains("/by")) {
+            throw new InvalidFormatException("pls /by correctly");
+        }
+        if (userInput.indexOf("/by") - 2 - userInput.indexOf(" ") < 1) {
+            throw new InvalidFormatException("u need sumting between deadline and /by");
+        }
+        return true;
     }
 
     /**
@@ -183,24 +107,49 @@ public class Parser {
     public static boolean isUnMark(String str) {
         if (str.startsWith("unmark ") || str.startsWith("Unmark ")) {
             String[] arr = str.split(" ");
-            if (arr.length == 2) {
-                try {
-                    Integer.parseInt(arr[1]);
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
+            if (arr.length != 2) {
+                return false;
+            }
+            try {
+                Integer.parseInt(arr[1]);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
             }
         }
         return false;
     }
 
-    /**
-     * just runs the searchWord() method for TaskList
-     * @param userInput its the userinput
-     */
-    public String handleFind(String userInput) {
-        HandleFindCommand handleFind = new HandleFindCommand(list, userInput);
-        return handleFind.execute();
+    public static DeadlineTask parseDeadline(String details) throws InvalidFormatException {
+        String[] parts = details.split("/by", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new InvalidFormatException("Deadline needs '/by'. Weak bone man.");
+        }
+
+        String task = parts[0].trim();
+        String deadline = parts[1].trim();
+
+        if (task.isEmpty()) {
+            throw new InvalidFormatException("You need something before '/by'.");
+        }
+
+        return new DeadlineTask(task, deadline);
+    }
+
+    public static EventTask parseEvent(String details) throws InvalidFormatException {
+        String[] parts = details.split("/from|/to", 3);
+        if (parts.length < 3) {
+            throw new InvalidFormatException("Need both '/from' and '/to' keywords for event. Doot doot.");
+        }
+
+        String task = parts[0].trim();
+        String start = parts[1].trim();
+        String end = parts[2].trim();
+
+        if (task.isEmpty() || start.isEmpty() || end.isEmpty()) {
+            throw new InvalidFormatException("Make sure there's text between 'event', '/from', and '/to'.");
+        }
+
+        return new EventTask(task, start, end);
     }
 }

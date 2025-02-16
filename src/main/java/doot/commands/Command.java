@@ -1,10 +1,8 @@
 package doot.commands;
 
-import doot.InvalidFormatException;
-import doot.TaskList;
-
-import java.io.IOException;
-
+/**
+ * Used as a template for all commands
+ */
 interface Command{
     String execute();
 }
