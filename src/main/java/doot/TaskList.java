@@ -16,8 +16,8 @@ public class TaskList {
     public String addTask(String str) throws InvalidFormatException {
         Task task = Task.makeTask(str);
         arr.add(task);
-        Ui.showMessage("task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list");
-        return "task added\n   " + task.getDetails() + "\nyou now have " + arr.size() + " tasks in the list";
+        Ui.showMessage("Task added!\n   " + task.getDetails() + "\nEwe now have " + arr.size() + " tasks in the list!");
+        return "Task added!\n   " + task.getDetails() + "\nEwe now have " + arr.size() + " tasks in the list!";
     }
 
     //loads tasks by running the strings needed from the file.

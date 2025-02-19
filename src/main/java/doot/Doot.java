@@ -1,6 +1,7 @@
 package doot;
 import static doot.Logo.LOGO;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -23,6 +24,7 @@ public class Doot {
 
 
     public static void main(String[] args) {
+        System.out.println(javafx.scene.text.Font.getFamilies());
         Scanner scanner = new Scanner(System.in);
         System.out.println("________________________________________________________________________________________________________________________\n"
                 + "hello im \n"
@@ -35,7 +37,11 @@ public class Doot {
 
 
         while (!(userInput = scanner.nextLine()).equals("bye")) {
-            parser.handleCommand(userInput);
+            try {
+                parser.handleCommand(userInput);
+            } catch (IOException | InvalidFormatException e) {
+                System.out.println(e);
+            }
         }
 
         System.out.println("""
@@ -46,11 +52,11 @@ public class Doot {
 
     }
 
-    public String getResponse(String input) {
+    public String getResponse(String input) throws IOException, InvalidFormatException {
         return parser.handleCommand(input);
     }
 
     public String getIntro() {
-        return "hello im mr skeltal";
+        return "Take it easy!\nCirno is here to help!";
     }
 }

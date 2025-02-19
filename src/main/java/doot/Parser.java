@@ -2,6 +2,8 @@ package doot;
 
 import doot.commands.*;
 
+import java.io.IOException;
+
 /**
  * This class is for interpreting what the user means. It contains a Tasklist so it can edit it
  */
@@ -17,7 +19,7 @@ public class Parser {
      * Interprets the input in the parameter as a user command, and delegates the task
      * @param userInput comes from what user enters into the terminal
      */
-    public String handleCommand(String userInput) {
+    public String handleCommand(String userInput) throws IOException, InvalidFormatException {
         assert userInput != null: "userinput under Parser.handleCommand is null, something went wrong";
         String message;
         if (userInput.isEmpty()) {
@@ -29,11 +31,12 @@ public class Parser {
             case "doot doot" -> respond("doot doot");
             case "list" -> respond(list.returnList());
             case "listData" -> respond(list.listData());
+            case "Yukkuri shiteitte ne!" -> respond("Take it easy!");
             default -> handleDynamicCommands(userInput);
         };
     }
 
-    private String handleDynamicCommands(String userInput) {
+    private String handleDynamicCommands(String userInput) throws InvalidFormatException, IOException {
         if (Parser.isMark(userInput)) {
             return new HandleMarkCommand(userInput, list).execute();
         }
@@ -46,7 +49,10 @@ public class Parser {
         if (userInput.startsWith("find ")) {
             return new HandleFindCommand(list, userInput).execute();
         }
-        return new AddTaskCommand(list, userInput).execute();
+        if (userInput.startsWith("todo") || userInput.startsWith("deadline") || userInput.startsWith("event")) {
+            return new AddTaskCommand(list, userInput).execute();
+        }
+        return "Task not understood!";
     }
 
     private String respond(String message) {
@@ -110,14 +116,14 @@ public class Parser {
     public static DeadlineTask parseDeadline(String details) throws InvalidFormatException {
         String[] parts = details.split("/by", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new InvalidFormatException("Deadline needs '/by'. Weak bone man.");
+            throw new InvalidFormatException("Deadline tasks require /by.\n Do it again.");
         }
 
         String task = parts[0].trim();
         String deadline = parts[1].trim();
 
         if (task.isEmpty()) {
-            throw new InvalidFormatException("You need something before '/by'.");
+            throw new InvalidFormatException("You need something before '/by'.\n Do better.");
         }
 
         return new DeadlineTask(task, deadline);
@@ -126,7 +132,7 @@ public class Parser {
     public static EventTask parseEvent(String details) throws InvalidFormatException {
         String[] parts = details.split("/from|/to", 3);
         if (parts.length < 3) {
-            throw new InvalidFormatException("Need both '/from' and '/to' keywords for event. Doot doot.");
+            throw new InvalidFormatException("Wrong.\n You need both '/from' and '/to' keywords for event.");
         }
 
         String task = parts[0].trim();
@@ -134,7 +140,7 @@ public class Parser {
         String end = parts[2].trim();
 
         if (task.isEmpty() || start.isEmpty() || end.isEmpty()) {
-            throw new InvalidFormatException("Make sure there's text between 'event', '/from', and '/to'.");
+            throw new InvalidFormatException("Make sure there's text between 'event', '/from', and '/to'.\n Do not make me repeat myself");
         }
 
         return new EventTask(task, start, end);

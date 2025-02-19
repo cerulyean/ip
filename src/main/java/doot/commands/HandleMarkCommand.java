@@ -22,20 +22,19 @@ public class HandleMarkCommand implements Command{
 
 
 
-    public String execute() {
+    public String execute() throws IOException, InvalidFormatException {
         int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
         if (Parser.isValidIndex(index, list)) {
             list.mark(index);
-            Ui.showMessage("doot doot\n\n" + list.returnList());
-            try {
+            Ui.showMessage("Eye'm the strongest!\n\n" + list.returnList());
+//            try {
                 Storage.saveList(list);
-                return "doot doot\n\n" + list.returnList();
-            } catch (IOException e) {
-                return "file cant be saved\n" + e;
-            }
+                return "Eye'm the strongest!\n\n" + list.returnList();
+//            } catch (IOException e) {
+//                return "file cant be saved\n" + e;
+//            }
         } else {
-            Ui.showMessage("too big/too small number");
-            return "too big/too small number";
+            throw new InvalidFormatException("That number is invalid.\nFix it");
         }
     }
 }

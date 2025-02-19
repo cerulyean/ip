@@ -17,7 +17,7 @@ public abstract class Task {
     public static Task makeTask(String str) throws InvalidFormatException {
         String[] parts = str.split(" ", 2); // Split at first space
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new InvalidFormatException("Task must have a description. Nothing added, doot doot.");
+            throw new InvalidFormatException("Tasks must have a description.\n Fix it.");
         }
 
         String type = parts[0];
@@ -27,7 +27,7 @@ public abstract class Task {
             case "todo" -> new TodoTask(details);
             case "deadline" -> Parser.parseDeadline(details);
             case "event" -> Parser.parseEvent(details);
-            default -> throw new InvalidFormatException("Invalid task type, dumbass.");
+            default -> throw new InvalidFormatException("I do not understand this!");
         };
     }
 

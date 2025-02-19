@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
@@ -21,6 +23,8 @@ public class DialogBox extends HBox {
     private Label dialog;
     @FXML
     private ImageView displayPicture;
+    @FXML
+    private StackPane bubble;
 
     private DialogBox(String text, Image img) {
         try {
@@ -28,6 +32,7 @@ public class DialogBox extends HBox {
             fxmlLoader.setController(this);
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
+            bubble.prefHeightProperty().bind(dialog.heightProperty());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,6 +49,7 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+        bubble.setStyle("-fx-background-color: lightblue; -fx-background-radius: 5px");
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
@@ -53,6 +59,15 @@ public class DialogBox extends HBox {
     public static DialogBox getDukeDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.dialog.setFont(Font.font("Kristen ITC", 15));
+        return db;
+    }
+
+    public static DialogBox getErrorDialog(String text, Image img) {
+        var db = new DialogBox(text, img);
+        db.flip();
+        db.bubble.setStyle("-fx-background-color: red; -fx-background-radius: 5px");
+        db.dialog.setFont(Font.font("Engravers MT", 20));
         return db;
     }
 }

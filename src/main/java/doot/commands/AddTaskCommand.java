@@ -16,17 +16,17 @@ public class AddTaskCommand implements Command{
         this.userInput = userInput;
     }
 
-    public String execute() {
-        try {
-            String temp = list.addTask(userInput);
-            Storage.saveList(list);
-            return temp;
-        } catch (InvalidFormatException e) {
-            Ui.showMessage(e.toString());
-            return e.toString();
-        } catch (IOException e) {
-            return "ioexception, save went wrong" + e;
-        }
+    public String execute() throws InvalidFormatException, IOException{
+//        try {
+        String temp = list.addTask(userInput);
+        Storage.saveList(list);
+        return temp;
+//        } catch (InvalidFormatException e) {
+//            Ui.showMessage(e.toString());
+//            return e.toString();
+//        } catch (IOException e) {
+//            return "ioexception, save went wrong" + e;
+//        }
     }
 
 }

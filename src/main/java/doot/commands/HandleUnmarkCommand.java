@@ -1,9 +1,6 @@
 package doot.commands;
 
-import doot.Parser;
-import doot.Storage;
-import doot.TaskList;
-import doot.Ui;
+import doot.*;
 
 import java.io.IOException;
 
@@ -30,20 +27,19 @@ public class HandleUnmarkCommand implements Command {
      * @return the response of the bot. It may be acknowledgement of task success, or an error message informing on
      * what went wrong
      */
-    public String execute() {
+    public String execute() throws IOException, InvalidFormatException {
         int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
         if (Parser.isValidIndex(index, list)) {
             list.unMark(index);
             Ui.showMessage("noot noot\n\n" + list.returnList());
-            try {
+//            try {
                 Storage.saveList(list);
                 return "doot doot\n\n" + list.returnList();
-            } catch (IOException e) {
-                return "file cant be saved\n" + e;
-            }
+//            } catch (IOException e) {
+//                return "file cant be saved\n" + e;
+//            }
         } else {
-            Ui.showMessage("too big/too small number");
-            return "too big/too small number";
+            throw new InvalidFormatException("That number is invalid.\nFix it");
         }
     }
 }
