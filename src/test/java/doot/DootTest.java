@@ -59,7 +59,7 @@ public class DootTest {
     }
 
     @Test
-    void testAddTask() {
+    void testAddTask() throws InvalidFormatException, IOException{
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
 
@@ -71,7 +71,7 @@ public class DootTest {
     }
 
     @Test
-    void testMarkTask() throws IOException {
+    void testMarkTask() throws IOException, InvalidFormatException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
 
@@ -85,7 +85,7 @@ public class DootTest {
     }
 
     @Test
-    void testUnMarkTask() throws IOException {
+    void testUnMarkTask() throws IOException, InvalidFormatException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
         Storage.clearSave();
@@ -98,7 +98,7 @@ public class DootTest {
     }
 
     @Test
-    void testDeleteTask() throws IOException {
+    void testDeleteTask() throws IOException, InvalidFormatException {
         TaskList taskList = new TaskList();
         Parser parser = new Parser(taskList);
         Storage.clearSave();
@@ -108,4 +108,5 @@ public class DootTest {
 
         assertEquals(0, taskList.size(), "Task list should be empty after deletion");
     }
+
 }
