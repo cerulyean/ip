@@ -52,7 +52,8 @@ public class DeadlineTask extends Task {
      */
     @Override
     public String getDetails() {
-        return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (by: " + getDeadline() + ")";
+        return this.getType() + this.getStatusIcon() + " " + this.getDescription() + " (by: " + getDeadline() + ")" +
+                (this.getTag() != null ? " #" + getTag() : "");
     }
 
     /**
@@ -66,7 +67,9 @@ public class DeadlineTask extends Task {
             list.append("d ");
         }
         list.append("deadline ").append(this.getDescription()).append(" /by ").append(deadline);
-
+        if (this.tag != null) {
+            list.append(" /tag ").append(this.getTag());
+        }
         return list.toString();
     }
 }

@@ -1,1 +1,4 @@
-todo Task 1
+todo 5
+d todo 6 /tag 7
+deadline task1 /by tmrw /tag asdas
+event eve /from tmrw /to thursday/tag pppoopoo

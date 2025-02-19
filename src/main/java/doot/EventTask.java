@@ -51,7 +51,8 @@ public class EventTask extends Task {
     @Override
     public String getDetails() {
         return this.getType() + this.getStatusIcon() + " " + this.getDescription()
-                + " (from: " + getStart() + " to: " + getEnd() + ")";
+                + " (from: " + getStart() + " to: " + getEnd() + ")" +
+                (this.getTag() != null ? " #" + getTag():"");
     }
 
     public String getStart() {
@@ -69,6 +70,9 @@ public class EventTask extends Task {
             list.append("d ");
         }
         list.append("event ").append(this.getDescription()).append(" /from ").append(start).append(" /to ").append(end);
+        if (getTag() != null) {
+            list.append("/tag ").append(getTag());
+        }
 
         return list.toString();
     }

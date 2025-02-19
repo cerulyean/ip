@@ -21,7 +21,6 @@ public class Parser {
      */
     public String handleCommand(String userInput) throws IOException, InvalidFormatException {
         assert userInput != null: "userinput under Parser.handleCommand is null, something went wrong";
-        String message;
         if (userInput.isEmpty()) {
             return respond("say something I'm giving up on you");
         }
@@ -113,36 +112,65 @@ public class Parser {
         return false;
     }
 
+    public static TodoTask parseTodo(String details) {
+        String tag = null;
+        if (details.contains("/tag ")) {
+            int index = details.indexOf("/tag ");
+            tag = details.substring(index + 5).strip();
+            details = details.substring(0, index);
+        }
+        TodoTask task = new TodoTask(details);
+        task.setTag(tag);
+        return task;
+    }
+
     public static DeadlineTask parseDeadline(String details) throws InvalidFormatException {
+        String tag = null;
+        if (details.contains("/tag ")) {
+            int index = details.indexOf("/tag ");
+            tag = details.substring(index + 5).strip();
+            details = details.substring(0, index);
+        }
+
         String[] parts = details.split("/by", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new InvalidFormatException("Deadline tasks require /by.\n Do it again.");
         }
 
-        String task = parts[0].trim();
+        String name = parts[0].trim();
         String deadline = parts[1].trim();
 
-        if (task.isEmpty()) {
+        if (name.isEmpty()) {
             throw new InvalidFormatException("You need something before '/by'.\n Do better.");
         }
-
-        return new DeadlineTask(task, deadline);
+        DeadlineTask task = new DeadlineTask(name, deadline);
+        task.setTag(tag);
+        return task;
     }
 
     public static EventTask parseEvent(String details) throws InvalidFormatException {
+        String tag = null;
+        if (details.contains("/tag ")) {
+            int index = details.indexOf("/tag");
+            tag = details.substring(index + 5).strip();
+            details = details.substring(0, index);
+        }
+
         String[] parts = details.split("/from|/to", 3);
         if (parts.length < 3) {
             throw new InvalidFormatException("Wrong.\n You need both '/from' and '/to' keywords for event.");
         }
 
-        String task = parts[0].trim();
+        String name = parts[0].trim();
         String start = parts[1].trim();
         String end = parts[2].trim();
 
-        if (task.isEmpty() || start.isEmpty() || end.isEmpty()) {
+        if (name.isEmpty() || start.isEmpty() || end.isEmpty()) {
             throw new InvalidFormatException("Make sure there's text between 'event', '/from', and '/to'.\n Do not make me repeat myself");
         }
+        EventTask task = new EventTask(name, start, end);
+        task.setTag(tag);
 
-        return new EventTask(task, start, end);
+        return task;
     }
 }
