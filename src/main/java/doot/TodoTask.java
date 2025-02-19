@@ -16,7 +16,8 @@ public class TodoTask extends Task {
     //returns details for todo objects
     @Override
     public String getDetails() {
-        return this.getType() + this.getStatusIcon() + " " + this.getDescription();
+        return this.getType() + this.getStatusIcon() + " " + this.getDescription() +
+                (this.getTag() != null ? " #" + getTag() : "");
     }
 
     //the string necessary to make this object again
@@ -27,6 +28,9 @@ public class TodoTask extends Task {
             list.append("d ");
         }
         list.append("todo ").append(this.getDescription());
+        if (getTag() != null) {
+            list.append(" /tag ").append(getTag());
+        }
 
         return list.toString();
     }

@@ -22,7 +22,7 @@ public class HandleMarkCommand implements Command{
 
 
 
-    public String execute() throws IOException, InvalidFormatException {
+    public String execute() throws IOException {
         int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
         if (Parser.isValidIndex(index, list)) {
             list.mark(index);
@@ -34,7 +34,8 @@ public class HandleMarkCommand implements Command{
 //                return "file cant be saved\n" + e;
 //            }
         } else {
-            throw new InvalidFormatException("That number is invalid.\nFix it");
+            Ui.showMessage("I cant do that! That number is wrong!");
+            return "I cant do that! That number is wrong!";
         }
     }
 }

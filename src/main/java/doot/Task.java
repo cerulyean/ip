@@ -5,11 +5,12 @@ package doot;
 public abstract class Task {
     protected String description;
     protected boolean isDone;
+    protected String tag;
 
     protected Type type;
 
     public Task(String description) {
-        this.description = description;
+        this.description = description.strip();
         this.isDone = false;
     }
 
@@ -23,8 +24,12 @@ public abstract class Task {
         String type = parts[0];
         String details = parts[1].trim();
 
+        if (details.startsWith("/tag")) {
+            throw new InvalidFormatException("Tasks need a name before tagging");
+        }
+
         return switch (type) {
-            case "todo" -> new TodoTask(details);
+            case "todo" -> Parser.parseTodo(details);
             case "deadline" -> Parser.parseDeadline(details);
             case "event" -> Parser.parseEvent(details);
             default -> throw new InvalidFormatException("I do not understand this!");
@@ -69,5 +74,13 @@ public abstract class Task {
     //returns if the task is complete
     public boolean isDone() {
         return isDone;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getTag() {
+        return this.tag;
     }
 }

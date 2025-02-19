@@ -1,6 +1,5 @@
 package doot.commands;
 
-import doot.InvalidFormatException;
 import doot.Task;
 import doot.TaskList;
 import doot.Ui;
@@ -21,23 +20,23 @@ public class HandleDeleteCommand implements Command {
     }
 
 
-    public String execute() throws IOException {
+    public String execute() throws IOException{
         int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
         if (isValidIndex(index, list)) {
             Task removed = list.getTask(index);
             list.removeTask(index);
-            Ui.showMessage("calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
+            Ui.showMessage("Good job!\n   removed " + removed.getDetails() + "\n" + list.size()
                     + " more to do\n");
 //            try {
                 saveList(list);
-                return "calcium for you\n   removed " + removed.getDetails() + "\n" + list.size()
+                return "Good job!\n   removed " + removed.getDetails() + "\n" + list.size()
                         + " more to do\n";
 //            } catch (IOException e) {
 //                return "file cant be saved\n" + e;
 //            }
         } else {
             Ui.showMessage("too big/too small number");
-            return "too big/too small number";
+            return "I cannot count that high/low!";
         }
     }
 }

@@ -57,6 +57,6 @@ public class Doot {
     }
 
     public String getIntro() {
-        return "Take it easy!\nCirno is here to help!";
+        return "Take it easy!";
     }
 }
