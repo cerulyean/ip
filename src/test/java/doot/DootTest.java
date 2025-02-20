@@ -50,8 +50,33 @@ public class DootTest {
         } catch (InvalidFormatException e) {
             fail("InvalidFormatError");
         }
-
     }
+
+    @Test
+    void testCreationString() {
+        try {
+            Task todo =  Task.makeTask("todo test");
+            assertEquals("todo test", todo.creationString());
+        } catch (InvalidFormatException e) {
+            fail("InvalidFormatException should not have been thrown");
+        }
+
+        try {
+            Task deadline =  Task.makeTask("deadline test 2 /by tmrw");
+            assertEquals("deadline test 2 /by tmrw", deadline.creationString());
+        } catch (InvalidFormatException e) {
+            fail("InvalidFormatError");
+        }
+
+        try {
+            Task event = Task.makeTask("event test3 /from beginning /to end");
+            assertEquals("event test3 /from beginning /to end", event.creationString());
+        } catch (InvalidFormatException e) {
+            fail("InvalidFormatError");
+        }
+    }
+
+
 
     @Test
     void clearLists() throws InterruptedException {
