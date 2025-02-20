@@ -1,7 +1,9 @@
 package doot;
 
-//the class for storing information on individual tasks.
-//contains state, description, type. This is an abstract class so that the more specific task classes can inherit
+/**
+ * the class for storing information on individual tasks.
+ * contains state, description, type. This is an abstract class so that the more specific task classes can inherit
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;
@@ -10,13 +12,24 @@ public abstract class Task {
     protected Type type;
 
     public Task(String description) {
+        assert description != null : "Task description should not be null";
+        assert !description.isBlank() : "Task description should not be empty";
         this.description = description.strip();
         this.isDone = false;
     }
 
-    //static class used to make a new class, then returns said class
+    /**
+     * static class used to make a new class, then returns said class
+     * @param str the userInput
+     * @return a new task
+     * @throws InvalidFormatException for if some of the formatting is invalid
+     */
     public static Task makeTask(String str) throws InvalidFormatException {
+        assert str != null : "makeTask string should never be null";
+
         String[] parts = str.split(" ", 2); // Split at first space
+        assert parts.length > 0 : "Splitting should always return at least one element";
+
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new InvalidFormatException("Tasks must have a description.\n Fix it.");
         }
@@ -28,6 +41,8 @@ public abstract class Task {
             throw new InvalidFormatException("Tasks need a name before tagging");
         }
 
+        assert !details.startsWith("/tag") : "exception should have been thrown instead";
+
         return switch (type) {
             case "todo" -> Parser.parseTodo(details);
             case "deadline" -> Parser.parseDeadline(details);
@@ -38,6 +53,7 @@ public abstract class Task {
 
     //checks if the str is a substring of the description
     public boolean isSubstring(String str) {
+        assert str != null : "isSubstring string should never be null";
         return this.description.contains(str);
     }
 

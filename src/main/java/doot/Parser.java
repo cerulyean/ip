@@ -19,6 +19,8 @@ public class Parser {
      * Interprets the input in the parameter as a user command, and delegates the task
      * @param userInput comes from what user enters into the terminal
      */
+    //i asked chatgpt how to make this method cleaner, because the original was a bunch of if statements strung together
+    //it was very ugly
     public String handleCommand(String userInput) throws IOException, InvalidFormatException {
         assert userInput != null: "userinput under Parser.handleCommand is null, something went wrong";
         if (userInput.isEmpty()) {
@@ -26,8 +28,6 @@ public class Parser {
         }
 
         return switch (userInput) {
-            case "thank mr skeltal" -> respond("good bones and calcium will come to you");
-            case "doot doot" -> respond("doot doot");
             case "list" -> respond(list.returnList());
             case "listData" -> respond(list.listData());
             case "Yukkuri shiteitte ne!" -> respond("Take it easy!");
@@ -36,6 +36,7 @@ public class Parser {
     }
 
     private String handleDynamicCommands(String userInput) throws InvalidFormatException, IOException {
+        assert !userInput.isBlank() : "handleDynamicCommands userInput is blank";
         if (Parser.isMark(userInput)) {
             return new HandleMarkCommand(userInput, list).execute();
         }
