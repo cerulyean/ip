@@ -46,7 +46,7 @@ public class EventTask extends Task {
     /**
      * Returns the details of this task, which includes type, status, description, start and end time, as well
      * as the tag
-     * @return
+     * @return the details of the task to be printed
      */
     @Override
     public String getDetails() {

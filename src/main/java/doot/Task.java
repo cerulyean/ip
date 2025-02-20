@@ -43,7 +43,7 @@ public abstract class Task {
 
     public String getType() {
         return "[" + type.name() + "]";
-    };
+    }
 
     //contains the line needed to create a copy of this task
     public abstract String creationString();
