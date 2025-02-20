@@ -24,8 +24,13 @@ public abstract class Task {
         String type = parts[0];
         String details = parts[1].trim();
 
-        if (details.startsWith("/tag")) {
-            throw new InvalidFormatException("Tasks need a name before tagging");
+
+        String[] keywords = {"/tag", "/end", "/start", "/by"};
+
+        for (String keyword : keywords) {
+            if (Parser.keywordChecker(str, keyword)) {
+                throw new InvalidFormatException("There cannot be multiple " + keyword + " in the input.");
+            }
         }
 
         return switch (type) {

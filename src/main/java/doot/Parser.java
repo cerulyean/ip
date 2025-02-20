@@ -178,4 +178,28 @@ public class Parser {
 
         return task;
     }
+
+    /**
+     * Counts the number of times a substring appears in the superstring. Used for determining if there's multiple tags
+     * where there shouldn't be. If there is more than 1 returns true, else returns false
+     * @param text the superstring, the userInput
+     * @param substring the keyword
+     * @return if the substring appears in the superstring multiple times
+     */
+    //Thanks chatgpt. I was looking for a cleaner way but apparently this is the best
+    public static boolean keywordChecker(String text, String substring) {
+        if (text == null || substring == null || substring.isEmpty()) {
+            return false;
+        }
+
+        int count = 0;
+        int index = 0;
+
+        while ((index = text.indexOf(substring, index)) != -1) {
+            count++;
+            index += substring.length();
+        }
+
+        return count > 1;
+    }
 }
