@@ -43,11 +43,11 @@ public class EventTask extends Task {
         }
     }
 
-    @Override
-    public String getType() {
-        return "[" + type.name() + "]";
-    }
-
+    /**
+     * Returns the details of this task, which includes type, status, description, start and end time, as well
+     * as the tag
+     * @return
+     */
     @Override
     public String getDetails() {
         return this.getType() + this.getStatusIcon() + " " + this.getDescription()
@@ -55,14 +55,26 @@ public class EventTask extends Task {
                 (this.getTag() != null ? " #" + getTag():"");
     }
 
+    /**
+     * gets the start time of the event in the string format
+     * @return datetime of the beginning
+     */
     public String getStart() {
         return !(datestart == null) ? datestart.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : start;
     }
 
+    /**
+     * gets the end time of the event in the string format
+     * @return datetime of the end
+     */
     public String getEnd() {
         return !(dateend == null) ? dateend.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : end;
     }
 
+    /**
+     * stitches together the command needed to recreate the task
+     * @return the string for recreation
+     */
     @Override
     public String creationString() {
         StringBuilder list = new StringBuilder();

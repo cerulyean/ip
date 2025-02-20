@@ -31,17 +31,10 @@ public class DeadlineTask extends Task {
     }
 
     /**
-     * Returns the deadline type as a string.
-     *
-     * @return A string representing the deadline type, surrounded by []
+     *deadline tasks include information on the actual deadline. This method converts the localtime to a string format
+     *if there isn't a localtime, it just returns the string instead
+     * @return the datetime of the deadline
      */
-    @Override
-    public String getType() {
-        return "[" + type.name() + "]";
-    }
-
-    //deadline tasks include information on the actual deadline. This method converts the localtime to a string format
-    //if there isn't a localtime, it just returns the string instead
     public String getDeadline() {
         return !(datedeadline == null) ? datedeadline.format(DateTimeFormatter.ofPattern("dd MMM, yyyy")) : deadline;
     }

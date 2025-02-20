@@ -112,6 +112,11 @@ public class Parser {
         return false;
     }
 
+    /**
+     * Used to parse the details to make the corresponding TodoTask
+     * @param details the userInput string but without the todo at the front
+     * @return the TodoTask to be created
+     */
     public static TodoTask parseTodo(String details) {
         String tag = null;
         if (details.contains("/tag ")) {

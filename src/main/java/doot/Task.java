@@ -41,7 +41,9 @@ public abstract class Task {
         return this.description.contains(str);
     }
 
-    public abstract String getType();
+    public String getType() {
+        return "[" + type.name() + "]";
+    };
 
     //contains the line needed to create a copy of this task
     public abstract String creationString();
