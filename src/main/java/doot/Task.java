@@ -38,7 +38,7 @@ public abstract class Task {
         String details = parts[1].trim();
 
 
-        String[] keywords = {"/tag", "/end", "/start", "/by"};
+        String[] keywords = {"/tag", "/to", "/from", "/by"};
 
         for (String keyword : keywords) {
             if (Parser.keywordChecker(str, keyword)) {

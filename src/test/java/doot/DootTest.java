@@ -26,15 +26,31 @@ public class DootTest {
     }
 
     @Test
-    void testPrintMethod() {
-        Ui.showMessage("test"); // Call the method that prints output
-        assertEquals("""
-                ________________________________________________________________________________________________________________________
-                test\
-                
-                ________________________________________________________________________________________________________________________
-                
-                """, outputStream.toString().replace("\r", ""));
+    void testMakeTask() throws InvalidFormatException {
+        try {
+            TodoTask todo1 = new TodoTask("test");
+            Task todo2 =  Task.makeTask("todo test");
+            assertEquals(todo1.getDetails(), todo2.getDetails());
+        } catch (InvalidFormatException e) {
+            fail("InvalidFormatException should not have been thrown");
+        }
+
+        try {
+            DeadlineTask deadline1 = new DeadlineTask("test 2", "tmrw");
+            Task deadline2 =  Task.makeTask("deadline test 2 /by tmrw");
+            assertEquals(deadline1.getDetails(), deadline2.getDetails());
+        } catch (InvalidFormatException e) {
+            fail("InvalidFormatError");
+        }
+
+        try {
+            EventTask event1 = new EventTask("test3", "beginning", "end");
+            Task event2 = Task.makeTask("event test3 /from beginning /to end");
+            assertEquals(event1.getDetails(), event2.getDetails());
+        } catch (InvalidFormatException e) {
+            fail("InvalidFormatError");
+        }
+
     }
 
     @Test
@@ -77,7 +93,7 @@ public class DootTest {
 
         Storage.clearSave();
         parser.handleCommand("todo Task 1"); // Add task
-        parser.handleCommand("todo piss 3");
+        parser.handleCommand("todo Task 2");
 
         parser.handleCommand("mark 2"); // Mark task 1
 
