@@ -78,18 +78,20 @@ public class Parser {
      * @return whether it is a mark command
      */
     public static boolean isMark(String str) {
-        if (str.startsWith("mark ") || str.startsWith("Mark ")) {
-            String[] arr = str.split(" ");
-            if (arr.length == 2) {
-                try {
-                    Integer.parseInt(arr[1]);
-                    return true;
-                } catch (NumberFormatException e) {
-                    return false;
-                }
-            }
+        if (!str.startsWith("mark ") && !str.startsWith("Mark ")) {
+            return false;
         }
-        return false;
+        String[] arr = str.split(" ");
+        if (arr.length != 2) {
+            return false;
+        }
+        try {
+            Integer.parseInt(arr[1]);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
     }
 
     /**
