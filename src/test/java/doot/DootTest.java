@@ -26,7 +26,7 @@ public class DootTest {
     }
 
     @Test
-    void testMakeTask() throws InvalidFormatException {
+    void testMakeTask() {
         try {
             TodoTask todo1 = new TodoTask("test");
             Task todo2 =  Task.makeTask("todo test");
