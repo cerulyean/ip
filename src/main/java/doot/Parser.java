@@ -33,6 +33,7 @@ public class Parser {
             case "list" -> respond(list.returnList());
             case "listData" -> respond(list.listData());
             case "Yukkuri shiteitte ne!" -> respond("Take it easy!");
+            case "bye" -> respond("Remember to take it easy!");
             default -> handleDynamicCommands(userInput);
         };
     }
