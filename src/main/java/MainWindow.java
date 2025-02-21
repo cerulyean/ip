@@ -8,10 +8,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Controller for the main GUI.
@@ -28,9 +27,9 @@ public class MainWindow extends AnchorPane {
 
     private Doot doot;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image dootImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
-    private Image errorImage = new Image(this.getClass().getResourceAsStream("/images/DaAngry.png"));
+    private final Image userImage = new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/DaUser.png")));
+    private final Image dootImage = new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/DaDuke.png")));
+    private final Image errorImage = new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/DaAngry.png")));
 
     @FXML
     public void initialize() {
