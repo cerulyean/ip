@@ -1,32 +1,40 @@
-DootPro
+# CirnoBot
 
-    “Your mind is for having ideas, not holding them.” – David Allen (source)
+>Yukkuri shiteitte ne! - [Yukkuri](https://myanimeshelf.com/figures/2716027_Touhou_Project_Plush_Yukkuri_Reimu_%28Deka_Size%29)
 
-DootPro frees your mind of having to remember things you need to do. It's,
+Ever wanted a Yukkuri to help you keep track of your tasks? Doesn't matter, here it is anyway!
 
-    text-based
-    easy to learn
-    FAST SUPER FAST to use
+- Keeps tracks of tasks!
+- Yells at you when you enter commands wrongly!
+- Speaks in a vaguely Yukkuri-like manner!
+- Catch a glimpse of the rare fumo!
 
 All you need to do is,
 
-    download it from here.
-    double-click it.
-    add your tasks.
-    let it manage your tasks for you 😉
+1. Download it!
+2. Double-click it!
+3. Add your tasks!
+4. Let it manage your tasks for you! 😉
 
 And it is FREE!
 
 Features:
 
-    Managing tasks
-    Managing deadlines (coming soon)
-    Reminders (coming soon)
+- [x] Managing tasks
+- [x] Managing deadlines
+- [ ] ~~Reminders~~
 
-If you are a Java programmer, you can use it to practice Java too. Here's the main method:
-
+If you are a Java programmer, you can use it to practice `Java` too. Here's the main method:
+```
 public class Main {
     public static void main(String[] args) {
         Application.launch(MainApp.class, args);
     }
 }
+```
+
+> [!TIP]
+> Enter help into the text box and click enter to get a list of commands!
+
+> [!NOTE]
+> Help command not implemented yet.
