@@ -15,7 +15,8 @@ import doot.Doot;
  */
 public class Main extends Application {
 
-    private Doot doot = new Doot();
+    private Doot doot;
+
 
     @Override
     public void start(Stage stage) {
@@ -24,6 +25,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("CirnoBot");
             fxmlLoader.<MainWindow>getController().setDoot(doot);  // inject the Duke instance
             stage.show();
         } catch (IOException e) {

@@ -44,18 +44,12 @@ public class Storage {
      * @param path to where the file is saved
      * @return the tasklist that is saved there
      */
-    public static TaskList loadList(String path) {
+    public static TaskList loadList(String path) throws FileNotFoundException, InvalidFormatException {
         File f = new File(path);
         TaskList list = new TaskList();
         if (f.exists()) {
-            try {
-                list.loadTask(f);
-                Ui.showMessage(list.returnList());
-            } catch (FileNotFoundException e) {
-                Ui.showMessage("this should never be seen");
-            } catch (InvalidFormatException e) {
-                Ui.showMessage("file corrupted, go see if theres anything salvagable because upon next list mod its all going to be overwritten");
-            }
+            list.loadTask(f);
+            Ui.showMessage(list.returnList());
         }
         return list;
     }

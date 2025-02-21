@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -37,9 +38,16 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setDoot(Doot d) {
         doot = d;
-        dialogContainer.getChildren().addAll(
-                DialogBox.getDukeDialog(doot.getIntro(), dootImage)
-        );
+        try {
+            doot = Doot.createDoot();
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getDukeDialog(doot.getIntro(), dootImage)
+            );
+        } catch (InvalidFormatException | FileNotFoundException e) {
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getDukeDialog(e.getMessage(), dootImage)
+            );
+        }
     }
 
 

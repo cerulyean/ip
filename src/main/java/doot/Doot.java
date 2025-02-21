@@ -1,6 +1,9 @@
 package doot;
+import javafx.scene.text.Font;
+
 import static doot.Logo.LOGO;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -17,14 +20,20 @@ public class Doot {
     public Doot() {
         scanner = new Scanner(System.in);
         TaskList list;
-        list = Storage.loadList("data/list.txt");
+        list = new TaskList();
         parser = new Parser(list);
+    }
+
+    public static Doot createDoot() throws FileNotFoundException, InvalidFormatException {
+        Doot doot = new Doot();
+        doot.list = Storage.loadList("data/list.txt");
+        return doot;
     }
 
 
 
-    public static void main(String[] args) {
-        System.out.println(javafx.scene.text.Font.getFamilies());
+    public static void main(String[] args) throws FileNotFoundException, InvalidFormatException {
+        System.out.println(Font.getFamilies());
         Scanner scanner = new Scanner(System.in);
         System.out.println("________________________________________________________________________________________________________________________\n"
                 + "hello im \n"

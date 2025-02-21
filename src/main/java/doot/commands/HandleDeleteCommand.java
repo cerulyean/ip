@@ -1,5 +1,6 @@
 package doot.commands;
 
+import doot.InvalidFormatException;
 import doot.Task;
 import doot.TaskList;
 import doot.Ui;
@@ -20,8 +21,13 @@ public class HandleDeleteCommand implements Command {
     }
 
 
-    public String execute() throws IOException{
-        int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+    public String execute() throws IOException, InvalidFormatException {
+        int index;
+        try {
+            index = Integer.parseInt(userInput.split(" ")[1]) - 1;
+        } catch (Exception e) {
+            throw new InvalidFormatException("The value you have provided is not valid");
+        }
         if (isValidIndex(index, list)) {
             Task removed = list.getTask(index);
             list.removeTask(index);
