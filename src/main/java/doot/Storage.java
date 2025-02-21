@@ -15,17 +15,19 @@ public class Storage {
      * @throws IOException incase the file cant be made for some reason
      */
     public static void saveList(TaskList list) throws IOException {
-        File folder = new File("data");
+        String filePath = "src" + File.separator + "main" + File.separator + "data" + File.separator + "list.txt";
+        String folderpath = "src" + File.separator + "main" + File.separator + "data";
+        File folder = new File(folderpath);
         if (!folder.exists()) {
             if (!folder.mkdirs()) {
                 throw new IOException("folder creation broke");
             }
         }
-        File f = new File("data/list.txt");
+        File f = new File(filePath);
         if (!f.exists()) {
             f.createNewFile();
         }
-        FileWriter fw = new FileWriter("data/list.txt");
+        FileWriter fw = new FileWriter(filePath);
         fw.write(list.listData());
         fw.close();
     }
