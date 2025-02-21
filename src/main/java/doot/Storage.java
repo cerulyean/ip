@@ -40,7 +40,7 @@ public class Storage {
     }
 
     /**
-     * this just creates an empty list and saves it, to empty anything that used to be there
+     * loads the tasklist saved
      * @param path to where the file is saved
      * @return the tasklist that is saved there
      */
@@ -50,6 +50,7 @@ public class Storage {
         if (f.exists()) {
             list.loadTask(f);
             Ui.showMessage(list.returnList());
+            return list;
         }
         return list;
     }

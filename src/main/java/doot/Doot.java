@@ -3,6 +3,7 @@ import javafx.scene.text.Font;
 
 import static doot.Logo.LOGO;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -26,9 +27,12 @@ public class Doot {
 
     public static Doot createDoot() throws FileNotFoundException, InvalidFormatException {
         Doot doot = new Doot();
-        doot.list = Storage.loadList("data/list.txt");
+        String filePath = "src" + File.separator + "main" + File.separator + "data" + File.separator + "list.txt";
+        doot.list = Storage.loadList(filePath);
+        doot.parser.list = doot.list;
         return doot;
     }
+
 
 
 

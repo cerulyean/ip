@@ -41,9 +41,10 @@ public class MainWindow extends AnchorPane {
         try {
             doot = Doot.createDoot();
             dialogContainer.getChildren().addAll(
-                    DialogBox.getDukeDialog(doot.getIntro(), dootImage)
+                    DialogBox.getDukeDialog(doot.getIntro(), dootImage),
+                    DialogBox.getDukeDialog(doot.getResponse("list"), dootImage)
             );
-        } catch (InvalidFormatException | FileNotFoundException e) {
+        } catch (InvalidFormatException | IOException e) {
             dialogContainer.getChildren().addAll(
                     DialogBox.getDukeDialog(e.getMessage(), dootImage)
             );

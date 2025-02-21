@@ -8,12 +8,14 @@ import java.io.IOException;
  * This class is for interpreting what the user means. It contains a Tasklist so it can edit it
  */
 public class Parser {
-    private TaskList list;
+    public TaskList list;
 
     public Parser(TaskList list) {
         assert list != null: "primary tasklist shouldnt be null. Under Parser constructor";
         this.list = list;
     }
+
+
 
     /**
      * Interprets the input in the parameter as a user command, and delegates the task
