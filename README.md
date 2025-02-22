@@ -35,6 +35,3 @@ public class Main {
 
 > [!TIP]
 > Enter help into the text box and click enter to get a list of commands!
-
-> [!NOTE]
-> Help command not implemented yet.
