@@ -7,6 +7,12 @@ public class HandleFindCommand implements Command {
     public String userInput;
     public TaskList list;
 
+    /**
+     * The constructor of the HandleFindCommand, which looks through a tasklist to see if any
+     * task has a matching description
+     * @param list the tasklist this command will look through
+     * @param userInput the entire input of the user
+     */
     public HandleFindCommand(TaskList list, String userInput) {
         this.userInput = userInput;
         this.list = list;
