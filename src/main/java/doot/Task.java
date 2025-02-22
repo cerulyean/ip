@@ -131,6 +131,10 @@ public abstract class Task {
         this.tag = tag;
     }
 
+    /**
+     * Gets the tag of the task
+     * @return a string representing the tag of the task
+     */
     public String getTag() {
         return this.tag;
     }
