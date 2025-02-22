@@ -21,6 +21,12 @@ public class HandleDeleteCommand implements Command {
     }
 
 
+    /**
+     * Executes the command that is prepared in the constructor
+     * @return What CirnoBot should respond with in a string format
+     * @throws IOException in case saving of the file doesnt work
+     * @throws InvalidFormatException will be thrown if the userInput is not in the correct format
+     */
     public String execute() throws IOException, InvalidFormatException {
         int index;
         try {
@@ -33,13 +39,9 @@ public class HandleDeleteCommand implements Command {
             list.removeTask(index);
             Ui.showMessage("Good job!\n   removed " + removed.getDetails() + "\n" + list.size()
                     + " more to do\n");
-//            try {
-                saveList(list);
-                return "Good job!\n   removed " + removed.getDetails() + "\n" + list.size()
-                        + " more to do\n";
-//            } catch (IOException e) {
-//                return "file cant be saved\n" + e;
-//            }
+            saveList(list);
+            return "Good job!\n   removed " + removed.getDetails() + "\n" + list.size()
+                    + " more to do\n";
         } else {
             Ui.showMessage("too big/too small number");
             return "I cannot count that high/low!";
