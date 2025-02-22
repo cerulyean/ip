@@ -14,6 +14,11 @@ public class HandleDeleteCommand implements Command {
     public TaskList list;
     public String userInput;
 
+    /**
+     * The constructor for a command that deletes a task from a tasklist
+     * @param list the tasklist the command will search through
+     * @param userInput the entire userInput
+     */
     public HandleDeleteCommand(TaskList list, String userInput) {
         this.list = list;
         this.userInput = userInput;
