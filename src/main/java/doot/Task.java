@@ -100,12 +100,16 @@ public abstract class Task {
         return description;
     }
 
-    //set task as complete
+    /**
+     * Sets the task as complete
+     */
     public void setDone() {
         this.isDone = true;
     }
 
-    //set task as no complete
+    /**
+     * Sets the task as not complete
+     */
     public void setUndone() {
         this.isDone = false;
     }
