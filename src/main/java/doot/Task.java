@@ -56,7 +56,11 @@ public abstract class Task {
         };
     }
 
-    //checks if the str is a substring of the description
+    /**
+     * checks if the str is a substring of the description
+     * @param str the substring
+     * @return a boolean representing if the substring is in this Task's description
+     */
     public boolean isSubstring(String str) {
         assert str != null : "isSubstring string should never be null";
         return this.description.contains(str);
@@ -66,7 +70,10 @@ public abstract class Task {
         return "[" + type.name() + "]";
     }
 
-    //contains the line needed to create a copy of this task
+    /**
+     * The method used to determine what was the string needed to create this task
+     * @return the string needed to recreate this task
+     */
     public abstract String creationString();
 
     //returns a string in the format to be passed to the UI to be printed for the user to see
