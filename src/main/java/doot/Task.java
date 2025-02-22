@@ -81,12 +81,21 @@ public abstract class Task {
         return this.getStatusIcon() + " " + this.getDescription();
     }
 
-    //returns the status of the task in a visually nicer manner
+    /**
+     * Returns the formatted status of the task for display to the user.
+     *
+     * @return A string representing the task's status.
+     */
+
     public String getStatusIcon() {
         return "[" + (isDone ? "X" : " ") + "]"; // mark done task with X
     }
 
-    //gets description
+    /**
+     * Returns the description of the task to the user
+     *
+     * @return A string representing the tak's description
+     */
     public String getDescription() {
         return description;
     }
