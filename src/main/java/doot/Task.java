@@ -114,11 +114,19 @@ public abstract class Task {
         this.isDone = false;
     }
 
-    //returns if the task is complete
+    /**
+     * Returns the completion of the task
+     *
+     * @return a boolean representing the completion of the task
+     */
     public boolean isDone() {
         return isDone;
     }
 
+    /**
+     * Sets the tag of the tasj
+     * @param tag the tag to be set for the task
+     */
     public void setTag(String tag) {
         this.tag = tag;
     }
