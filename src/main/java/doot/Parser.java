@@ -34,6 +34,7 @@ public class Parser {
             case "listData" -> respond(list.listData());
             case "Yukkuri shiteitte ne!" -> respond("Take it easy!");
             case "bye" -> respond("Remember to take it easy!");
+            case "help" -> respond(BasicCommands.help);
             default -> handleDynamicCommands(userInput);
         };
     }
