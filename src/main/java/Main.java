@@ -26,6 +26,8 @@ public class Main extends Application {
             Scene scene = new Scene(ap);
             stage.setScene(scene);
             stage.setTitle("CirnoBot");
+            stage.setWidth(600);  // Default width
+            stage.setHeight(800); // Default height
             fxmlLoader.<MainWindow>getController().setDoot(doot);  // inject the Duke instance
             stage.show();
         } catch (IOException e) {
