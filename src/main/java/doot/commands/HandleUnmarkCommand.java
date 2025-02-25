@@ -30,14 +30,13 @@ public class HandleUnmarkCommand implements Command {
     public String execute() throws IOException, InvalidFormatException {
         int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
         if (Parser.isValidIndex(index, list)) {
+            if (!list.getTask(index).isDone()) {
+                return "Task was not marked in the first place! Hears the entire thing again!\n\n" + list.returnList();
+            }
             list.unMark(index);
             Ui.showMessage("noot noot\n\n" + list.returnList());
-//            try {
-                Storage.saveList(list);
-                return "doot doot\n\n" + list.returnList();
-//            } catch (IOException e) {
-//                return "file cant be saved\n" + e;
-//            }
+            Storage.saveList(list);
+            return "Jobs finished!\n\n" + list.returnList();
         } else {
             throw new InvalidFormatException("That number is invalid.\nFix it");
         }

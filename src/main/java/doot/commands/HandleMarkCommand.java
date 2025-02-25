@@ -1,14 +1,12 @@
 package doot.commands;
 
 import doot.Parser;
-import doot.InvalidFormatException;
 import doot.TaskList;
 import doot.Ui;
 import doot.Storage;
 
 import java.io.IOException;
 
-import static doot.Storage.saveList;
 
 public class HandleMarkCommand implements Command{
     public String userInput;
@@ -25,14 +23,13 @@ public class HandleMarkCommand implements Command{
     public String execute() throws IOException {
         int index = Integer.parseInt(userInput.split(" ")[1]) - 1;
         if (Parser.isValidIndex(index, list)) {
+            if (list.getTask(index).isDone()) {
+                return "Task already done!\n\n" + list.returnList();
+            }
             list.mark(index);
             Ui.showMessage("Eye'm the strongest!\n\n" + list.returnList());
-//            try {
-                Storage.saveList(list);
-                return "Eye'm the strongest!\n\n" + list.returnList();
-//            } catch (IOException e) {
-//                return "file cant be saved\n" + e;
-//            }
+            Storage.saveList(list);
+            return "Eye'm the strongest!\n\n" + list.returnList();
         } else {
             Ui.showMessage("I cant do that! That number is wrong!");
             return "I cant do that! That number is wrong!";
