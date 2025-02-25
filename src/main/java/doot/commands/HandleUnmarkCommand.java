@@ -36,7 +36,7 @@ public class HandleUnmarkCommand implements Command {
             list.unMark(index);
             Ui.showMessage("noot noot\n\n" + list.returnList());
             Storage.saveList(list);
-            return "Jobs finished!\n\n" + list.returnList();
+            return "What? You want to do more work?\n\n" + list.returnList();
         } else {
             throw new InvalidFormatException("That number is invalid.\nFix it");
         }

@@ -29,7 +29,7 @@ public class HandleMarkCommand implements Command{
             list.mark(index);
             Ui.showMessage("Eye'm the strongest!\n\n" + list.returnList());
             Storage.saveList(list);
-            return "Eye'm the strongest!\n\n" + list.returnList();
+            return "Job's finished!\n\n" + list.returnList();
         } else {
             Ui.showMessage("I cant do that! That number is wrong!");
             return "I cant do that! That number is wrong!";
